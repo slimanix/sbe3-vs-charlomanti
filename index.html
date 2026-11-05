@@ -101,7 +101,7 @@
       </button>
     </div>
 
-    <!-- ONLINE ROOM CREATOR / JOINER PANEL (VISIBLE WHEN ONLINE TAB SELECTED) -->
+    <!-- ONLINE ROOM CREATOR / JOINER PANEL -->
     <div id="onlinePanel" class="hidden w-full max-w-2xl bg-slate-950/95 border-2 border-emerald-500/60 rounded-2xl p-4 sm:p-5 shadow-[0_0_30px_rgba(16,185,129,0.2)] mb-4 flex flex-col gap-3">
       <div class="flex items-center justify-between border-b border-emerald-950 pb-2">
         <div class="flex items-center gap-2">
@@ -117,12 +117,12 @@
         <!-- Host Box -->
         <div class="p-3.5 bg-slate-900/90 border border-emerald-500/30 rounded-xl flex flex-col gap-2">
           <span class="font-bold text-xs text-emerald-300 uppercase">1. Host Game (Create Room)</span>
-          <p class="text-[11px] text-slate-400">Generate a room code and send it or the link to your friend!</p>
+          <p class="text-[11px] text-slate-400">Generate a room code and send the code or link to your friend:</p>
           <button onclick="hostOnlineRoom()" id="hostBtn" class="mt-auto px-4 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-black text-xs uppercase tracking-wider rounded-lg transition active:scale-95">
             🔑 Create Online Room
           </button>
           
-          <!-- Room Info Display (after hosting) -->
+          <!-- Room Info Display -->
           <div id="hostInfo" class="hidden flex flex-col gap-2 bg-black/70 p-2.5 rounded-lg border border-emerald-500/40 text-xs">
             <div class="flex items-center justify-between">
               <span class="text-slate-400">Room Code:</span>
@@ -145,7 +145,7 @@
               ⚡ Join
             </button>
           </div>
-          <span id="joinStatusText" class="text-[10px] text-slate-400 text-center">No sign-up or password required!</span>
+          <span id="joinStatusText" class="text-[10px] text-slate-400 text-center">No login or signup required!</span>
         </div>
       </div>
     </div>
@@ -376,15 +376,69 @@
 
     </div>
 
-    <!-- Dynamic On-Screen Controls Panel -->
-    <div id="playerControlsPanel" class="w-full mt-3 bg-slate-950/90 border border-red-950/80 rounded-xl p-3 shadow-lg">
-      <div class="flex items-center justify-between text-amber-400 font-bold uppercase pb-1 border-b border-slate-800 text-xs">
-        <span id="controllerTitle">🦁 Sbe3 Controls</span>
-        <span class="text-[10px] text-slate-400">Keys: [A/D] Move, [W] Jump, [S] Crouch</span>
+    <!-- COMPLETE D-PAD & ACTION CONTROLLER (TOUCH & MOUSE FRIENDLY) -->
+    <div id="playerControlsPanel" class="w-full mt-3 bg-slate-950/95 border border-red-950/80 rounded-xl p-3 shadow-2xl">
+      
+      <!-- Controller Header -->
+      <div class="flex items-center justify-between text-amber-400 font-bold uppercase pb-2 border-b border-slate-800 text-xs">
+        <span id="controllerTitle">🕹️ Battle Controller (Touch / Click & Keyboard)</span>
+        <span class="text-[10px] text-slate-400">Desktop: [A/D] Walk, [W] Jump, [S] Crouch, [J/K/U/I] Attack</span>
       </div>
-      <div id="controlButtonsGrid" class="grid grid-cols-4 gap-2 mt-2 text-xs">
-        <!-- Dynamically populated -->
+
+      <!-- Split Layout: Movement D-Pad (Left) + Attack Cluster (Right) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 text-xs">
+        
+        <!-- LEFT: D-PAD MOVEMENT CONTROLS -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-col gap-1.5">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+            <span>🕹️</span> Movement Controls (Hold to Walk)
+          </span>
+          <div class="grid grid-cols-4 gap-1.5">
+            <!-- Left Walk -->
+            <button 
+              onpointerdown="startMove(-1)" 
+              onpointerup="stopMove()" 
+              onpointerleave="stopMove()" 
+              class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-center font-black text-slate-200 active:bg-amber-600 active:text-white transition touch-none">
+              ◀ Left<br><span class="text-[9px] text-slate-400">[A]</span>
+            </button>
+            <!-- Right Walk -->
+            <button 
+              onpointerdown="startMove(1)" 
+              onpointerup="stopMove()" 
+              onpointerleave="stopMove()" 
+              class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-center font-black text-slate-200 active:bg-amber-600 active:text-white transition touch-none">
+              ▶ Right<br><span class="text-[9px] text-slate-400">[D]</span>
+            </button>
+            <!-- Jump -->
+            <button 
+              onpointerdown="triggerJump()" 
+              class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-center font-black text-slate-200 active:bg-amber-600 active:text-white transition touch-none">
+              ▲ Jump<br><span class="text-[9px] text-slate-400">[W]</span>
+            </button>
+            <!-- Crouch / Duck -->
+            <button 
+              onpointerdown="startCrouch()" 
+              onpointerup="stopCrouch()" 
+              onpointerleave="stopCrouch()" 
+              class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-center font-black text-slate-200 active:bg-amber-600 active:text-white transition touch-none">
+              ▼ Duck<br><span class="text-[9px] text-slate-400">[S]</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: ACTION ATTACK CONTROLS -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-col gap-1.5">
+          <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
+            <span>⚔️</span> Combat Actions
+          </span>
+          <div id="controlButtonsGrid" class="grid grid-cols-4 gap-1.5">
+            <!-- Dynamically populated based on chosen character -->
+          </div>
+        </div>
+
       </div>
+
     </div>
 
   </div>
@@ -392,7 +446,7 @@
   <!-- MAIN SCRIPT ENGINE -->
   <script>
     // =====================================
-    // 1. PROCEDURAL SOUND SYNTHESIZER
+    // 1. SOUND SYNTHESIZER
     // =====================================
     let audioCtx = null;
     let soundOn = true;
@@ -499,14 +553,13 @@
     }
 
     // =====================================
-    // 2. ZERO-AUTH WEBRTC MULTIPLAYER (PEERJS)
+    // 2. ZERO-AUTH WEBRTC P2P MULTIPLAYER
     // =====================================
     let peer = null;
     let netConn = null;
     let isOnlineHost = false;
     let currentRoomCode = null;
     let isOnlineMultiplayer = false;
-    let pingStartTime = 0;
 
     function switchMainTab(tab) {
       document.getElementById('tabSoloBtn').className = tab === 'solo' ? 'px-5 py-2 rounded-xl bg-red-700 text-white shadow-lg transition' : 'px-5 py-2 rounded-xl bg-slate-900 text-slate-400 hover:text-white transition';
@@ -544,7 +597,6 @@
       });
 
       peer.on('connection', (conn) => {
-        // Someone joined our room!
         netConn = conn;
         setupDataConnection();
       });
@@ -561,7 +613,6 @@
 
     function hostOnlineRoom() {
       initAudio();
-      // Generate clean 4-digit numeric room code
       const code = Math.floor(1000 + Math.random() * 9000).toString();
       const peerRoomId = 'sbe3-kombat-' + code;
       currentRoomCode = code;
@@ -617,17 +668,15 @@
         badge.className = 'text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500 font-bold';
         pingBadge.classList.remove('hidden');
 
-        // Exchange fighter picks
         sendNetMsg({
           type: 'ready',
           fighter: selectedPlayerFighter,
           isHost: isOnlineHost
         });
 
-        // Auto-start into arena
         setTimeout(() => {
           startCombat();
-        }, 600);
+        }, 500);
       });
 
       netConn.on('data', (data) => {
@@ -648,20 +697,32 @@
 
     function handleNetMessage(msg) {
       if (msg.type === 'action') {
-        // Execute move on opponent
         const target = isOnlineHost ? 'p2' : 'p1';
         doAction(target, msg.action, true);
       }
-      else if (msg.type === 'input') {
+      else if (msg.type === 'move') {
+        // Opponent movement
         const opp = isOnlineHost ? p2 : p1;
-        if (msg.vx !== undefined) opp.vx = msg.vx;
-        if (msg.vy !== undefined) opp.vy = msg.vy;
-        if (msg.state) opp.state = msg.state;
+        opp.vx = msg.dir * 5;
+        opp.state = msg.dir !== 0 ? 'walk' : 'idle';
+      }
+      else if (msg.type === 'jump') {
+        const opp = isOnlineHost ? p2 : p1;
+        if (opp.isGrounded) {
+          opp.vy = -18;
+          opp.state = 'jump';
+        }
+      }
+      else if (msg.type === 'crouch') {
+        const opp = isOnlineHost ? p2 : p1;
+        opp.state = msg.down ? 'crouch' : 'idle';
       }
       else if (msg.type === 'sync' && !isOnlineHost) {
-        // Guest receives authoritative state from Host
+        // Guest receives authoritative coordinates
         p1.x = msg.p1.x; p1.y = msg.p1.y; p1.hp = msg.p1.hp; p1.superGauge = msg.p1.super;
         p2.x = msg.p2.x; p2.y = msg.p2.y; p2.hp = msg.p2.hp; p2.superGauge = msg.p2.super;
+        p1.state = msg.p1.state;
+        p2.state = msg.p2.state;
         game.timer = msg.timer;
         document.getElementById('hudTimer').textContent = msg.timer;
         updateHUD();
@@ -671,7 +732,7 @@
       }
     }
 
-    // Check URL parameters for direct room join (?room=1234)
+    // Direct room join via link parameter
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const roomParam = params.get('room') || params.get('join');
@@ -685,11 +746,76 @@
     });
 
     // =====================================
-    // 3. FIGHTER SELECTION & PREPARATION
+    // 3. MOVEMENT CONTROLLER HANDLERS
+    // =====================================
+    function getActivePlayerFighter() {
+      return (gameMode === 'online' && !isOnlineHost) ? p2 : p1;
+    }
+
+    function startMove(dir) {
+      initAudio();
+      if (game.status !== 'fighting') return;
+      const f = getActivePlayerFighter();
+      f.vx = dir * 5;
+      f.state = 'walk';
+
+      if (gameMode === 'online') {
+        sendNetMsg({ type: 'move', dir: dir });
+      }
+    }
+
+    function stopMove() {
+      if (game.status !== 'fighting') return;
+      const f = getActivePlayerFighter();
+      if (f.state === 'walk') f.state = 'idle';
+      f.vx = 0;
+
+      if (gameMode === 'online') {
+        sendNetMsg({ type: 'move', dir: 0 });
+      }
+    }
+
+    function triggerJump() {
+      initAudio();
+      if (game.status !== 'fighting') return;
+      const f = getActivePlayerFighter();
+      if (f.isGrounded) {
+        f.vy = -18;
+        f.state = 'jump';
+
+        if (gameMode === 'online') {
+          sendNetMsg({ type: 'jump' });
+        }
+      }
+    }
+
+    function startCrouch() {
+      initAudio();
+      if (game.status !== 'fighting') return;
+      const f = getActivePlayerFighter();
+      f.state = 'crouch';
+
+      if (gameMode === 'online') {
+        sendNetMsg({ type: 'crouch', down: true });
+      }
+    }
+
+    function stopCrouch() {
+      if (game.status !== 'fighting') return;
+      const f = getActivePlayerFighter();
+      if (f.state === 'crouch') f.state = 'idle';
+
+      if (gameMode === 'online') {
+        sendNetMsg({ type: 'crouch', down: false });
+      }
+    }
+
+    // =====================================
+    // 4. FIGHTER SELECTION & PREPARATION
     // =====================================
     let selectedPlayerFighter = 'sbe3';
     let cpuDifficulty = 'medium';
-    let gameMode = 'pve'; // 'pve', 'pvp', 'online'
+    let gameMode = 'pve';
 
     function pickFighter(fighterId) {
       initAudio();
@@ -743,8 +869,8 @@
       const sub = document.getElementById('matchSubtitle');
       if (gameMode === 'online') {
         sub.textContent = isOnlineHost 
-          ? `ONLINE P2P MATCH: YOU (${selectedPlayerFighter.toUpperCase()}) VS GUEST` 
-          : `ONLINE P2P MATCH: YOU (${selectedPlayerFighter.toUpperCase()}) VS HOST`;
+          ? `ONLINE MATCH: YOU (${selectedPlayerFighter.toUpperCase()}) VS GUEST` 
+          : `ONLINE MATCH: YOU (${selectedPlayerFighter.toUpperCase()}) VS HOST`;
       } else if (gameMode === 'pvp') {
         sub.textContent = '2-PLAYER LOCAL DUEL (SAME KEYBOARD)';
       } else {
@@ -758,38 +884,35 @@
 
     function setupController() {
       const grid = document.getElementById('controlButtonsGrid');
-      const title = document.getElementById('controllerTitle');
 
       if (selectedPlayerFighter === 'sbe3') {
-        title.innerHTML = '🦁 Sbe3 Moves (You)';
         grid.innerHTML = `
-          <button onmousedown="handleLocalAction('punch')" class="p-2.5 rounded-lg bg-slate-900 hover:bg-amber-950/60 border border-amber-500/40 font-bold text-amber-300 text-center active:scale-95 transition">
-            🐾 Claw Punch<br><span class="text-[10px] text-slate-400">[J]</span>
+          <button onpointerdown="handleLocalAction('punch')" class="p-3 rounded-lg bg-slate-800 hover:bg-amber-950/60 border border-amber-500/40 font-bold text-amber-300 text-center active:scale-95 transition">
+            🐾 Claw Punch<br><span class="text-[9px] text-slate-400">[J]</span>
           </button>
-          <button onmousedown="handleLocalAction('kick')" class="p-2.5 rounded-lg bg-slate-900 hover:bg-amber-950/60 border border-amber-500/40 font-bold text-amber-300 text-center active:scale-95 transition">
-            💥 Lion Kick<br><span class="text-[10px] text-slate-400">[K]</span>
+          <button onpointerdown="handleLocalAction('kick')" class="p-3 rounded-lg bg-slate-800 hover:bg-amber-950/60 border border-amber-500/40 font-bold text-amber-300 text-center active:scale-95 transition">
+            💥 Lion Kick<br><span class="text-[9px] text-slate-400">[K]</span>
           </button>
-          <button onmousedown="handleLocalAction('alt_ego')" class="p-2.5 rounded-lg bg-purple-950/50 hover:bg-purple-900/60 border border-purple-500 font-bold text-purple-300 text-center active:scale-95 transition">
-            🎭 Alt Ego Shift<br><span class="text-[10px] text-slate-400">[U] +60% ATK</span>
+          <button onpointerdown="handleLocalAction('alt_ego')" class="p-3 rounded-lg bg-purple-950/50 hover:bg-purple-900/60 border border-purple-500 font-bold text-purple-300 text-center active:scale-95 transition">
+            🎭 Alt Ego<br><span class="text-[9px] text-slate-400">[U] +60% ATK</span>
           </button>
-          <button id="p1UltBtn" onmousedown="handleLocalAction('ult')" class="p-2.5 rounded-lg bg-amber-950/70 hover:bg-amber-700 border border-yellow-400 font-black text-yellow-300 text-center active:scale-95 transition disabled:opacity-40">
-            👑 Charisma Ult!<br><span class="text-[10px] text-slate-300">[I] 100%</span>
+          <button id="p1UltBtn" onpointerdown="handleLocalAction('ult')" class="p-3 rounded-lg bg-amber-950/70 hover:bg-amber-700 border border-yellow-400 font-black text-yellow-300 text-center active:scale-95 transition disabled:opacity-40">
+            👑 Charisma Ult!<br><span class="text-[9px] text-slate-300">[I] 100%</span>
           </button>
         `;
       } else {
-        title.innerHTML = '🐆 Charlomanti Moves (You)';
         grid.innerHTML = `
-          <button onmousedown="handleLocalAction('punch')" class="p-2.5 rounded-lg bg-slate-900 hover:bg-emerald-950/60 border border-emerald-500/40 font-bold text-emerald-300 text-center active:scale-95 transition">
-            🐾 Claw Slash<br><span class="text-[10px] text-slate-400">[J]</span>
+          <button onpointerdown="handleLocalAction('punch')" class="p-3 rounded-lg bg-slate-800 hover:bg-emerald-950/60 border border-emerald-500/40 font-bold text-emerald-300 text-center active:scale-95 transition">
+            🐾 Claw Slash<br><span class="text-[9px] text-slate-400">[J]</span>
           </button>
-          <button onmousedown="handleLocalAction('kick')" class="p-2.5 rounded-lg bg-teal-950/50 hover:bg-teal-900/60 border border-teal-400 font-bold text-teal-300 text-center active:scale-95 transition">
-            🥋 Law Doc Hits!<br><span class="text-[10px] text-slate-400">[K] 3x Low Sweep</span>
+          <button onpointerdown="handleLocalAction('kick')" class="p-3 rounded-lg bg-teal-950/50 hover:bg-teal-900/60 border border-teal-400 font-bold text-teal-300 text-center active:scale-95 transition">
+            🥋 Law Doc Hits!<br><span class="text-[9px] text-slate-400">[K] 3x Low Sweep</span>
           </button>
-          <button onmousedown="handleLocalAction('camo')" class="p-2.5 rounded-lg bg-slate-900 hover:bg-emerald-950/60 border border-emerald-500 font-bold text-emerald-300 text-center active:scale-95 transition">
-            🌫️ Shadow Camo<br><span class="text-[10px] text-slate-400">[U] Dodge</span>
+          <button onpointerdown="handleLocalAction('camo')" class="p-3 rounded-lg bg-slate-800 hover:bg-emerald-950/60 border border-emerald-500 font-bold text-emerald-300 text-center active:scale-95 transition">
+            🌫️ Shadow Camo<br><span class="text-[9px] text-slate-400">[U] Dodge</span>
           </button>
-          <button id="p1UltBtn" onmousedown="handleLocalAction('ult')" class="p-2.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-700 border border-emerald-400 font-black text-cyan-300 text-center active:scale-95 transition disabled:opacity-40">
-            🌪️ Apex Ult!<br><span class="text-[10px] text-slate-300">[I] 100%</span>
+          <button id="p1UltBtn" onpointerdown="handleLocalAction('ult')" class="p-3 rounded-lg bg-emerald-950/70 hover:bg-emerald-700 border border-emerald-400 font-black text-cyan-300 text-center active:scale-95 transition disabled:opacity-40">
+            🌪️ Apex Ult!<br><span class="text-[9px] text-slate-300">[I] 100%</span>
           </button>
         `;
       }
@@ -806,7 +929,7 @@
     }
 
     // =====================================
-    // 4. CANVAS RENDERING & 2D PHYSICS
+    // 5. CANVAS RENDERING & FIGHTER CLASS
     // =====================================
     const canvas = document.getElementById('stageCanvas');
     const ctx = canvas.getContext('2d');
@@ -1386,7 +1509,7 @@
     }
 
     // =====================================
-    // 5. BALANCED CPU AI (FOR SOLO MODE)
+    // 6. CPU AI (FOR SOLO MODE)
     // =====================================
     let cpuCooldown = 0;
 
@@ -1433,25 +1556,12 @@
       }
       if (game.status !== 'fighting') return;
 
-      const myFighter = (gameMode === 'online' && !isOnlineHost) ? p2 : p1;
-      const myKey = (gameMode === 'online' && !isOnlineHost) ? 'p2' : 'p1';
+      const myFighter = getActivePlayerFighter();
 
-      if (k === 'w' && myFighter.isGrounded) { 
-        myFighter.vy = -18; myFighter.state = 'jump';
-        if (gameMode === 'online') sendNetMsg({ type: 'input', vy: -18, state: 'jump' });
-      }
-      if (k === 's') { 
-        myFighter.state = 'crouch'; 
-        if (gameMode === 'online') sendNetMsg({ type: 'input', state: 'crouch' });
-      }
-      if (k === 'a') { 
-        myFighter.vx = -5; myFighter.state = 'walk'; 
-        if (gameMode === 'online') sendNetMsg({ type: 'input', vx: -5, state: 'walk' });
-      }
-      if (k === 'd') { 
-        myFighter.vx = 5; myFighter.state = 'walk'; 
-        if (gameMode === 'online') sendNetMsg({ type: 'input', vx: 5, state: 'walk' });
-      }
+      if (k === 'w') triggerJump();
+      if (k === 's') startCrouch();
+      if (k === 'a') startMove(-1);
+      if (k === 'd') startMove(1);
       if (k === 'j') handleLocalAction('punch');
       if (k === 'k') handleLocalAction('kick');
       if (k === 'u') handleLocalAction(myFighter.type === 'sbe3' ? 'alt_ego' : 'camo');
@@ -1472,16 +1582,8 @@
 
     window.addEventListener('keyup', (e) => {
       const k = e.key.toLowerCase();
-      const myFighter = (gameMode === 'online' && !isOnlineHost) ? p2 : p1;
-      if (k === 'a' || k === 'd') { 
-        if (myFighter.state === 'walk') myFighter.state = 'idle'; 
-        myFighter.vx = 0; 
-        if (gameMode === 'online') sendNetMsg({ type: 'input', vx: 0, state: 'idle' });
-      }
-      if (k === 's') { 
-        if (myFighter.state === 'crouch') myFighter.state = 'idle'; 
-        if (gameMode === 'online') sendNetMsg({ type: 'input', state: 'idle' });
-      }
+      if (k === 'a' || k === 'd') stopMove();
+      if (k === 's') stopCrouch();
       if (gameMode === 'pvp') {
         if (k === 'arrowleft' || k === 'arrowright') { if (p2.state === 'walk') p2.state = 'idle'; p2.vx = 0; }
         if (k === 'arrowdown') { if (p2.state === 'crouch') p2.state = 'idle'; }
@@ -1494,13 +1596,11 @@
       sky.addColorStop(0, '#020617'); sky.addColorStop(0.5, '#1e1b4b'); sky.addColorStop(1, '#450a0a');
       c.fillStyle = sky; c.fillRect(0, 0, 960, 540);
 
-      // Blood Moon
       c.save();
       c.fillStyle = '#dc2626'; c.shadowColor = '#ef4444'; c.shadowBlur = 45;
       c.beginPath(); c.arc(480, 110, 52, 0, Math.PI * 2); c.fill();
       c.restore();
 
-      // Pillars
       c.fillStyle = '#0f172a';
       [-20, 210, 710, 920].forEach((px) => {
         c.fillRect(px, 120, 55, 325);
@@ -1508,7 +1608,6 @@
         c.fillRect(px - 5, 430, 65, 18);
       });
 
-      // Torches
       [237, 737].forEach((tx) => {
         c.save();
         c.fillStyle = Math.random() > 0.5 ? '#f59e0b' : '#ef4444';
@@ -1517,7 +1616,6 @@
         c.restore();
       });
 
-      // Floor
       const flr = c.createLinearGradient(0, 445, 0, 540);
       flr.addColorStop(0, '#1c1917'); flr.addColorStop(0.3, '#292524'); flr.addColorStop(1, '#09090b');
       c.fillStyle = flr; c.fillRect(0, 445, 960, 95);
@@ -1553,8 +1651,8 @@
       if (gameMode === 'online' && isOnlineHost && frameCount % 2 === 0 && netConn && netConn.open) {
         sendNetMsg({
           type: 'sync',
-          p1: { x: p1.x, y: p1.y, hp: p1.hp, super: p1.superGauge },
-          p2: { x: p2.x, y: p2.y, hp: p2.hp, super: p2.superGauge },
+          p1: { x: p1.x, y: p1.y, hp: p1.hp, super: p1.superGauge, state: p1.state },
+          p2: { x: p2.x, y: p2.y, hp: p2.hp, super: p2.superGauge, state: p2.state },
           timer: game.timer
         });
       }
