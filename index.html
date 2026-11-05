@@ -2,468 +2,293 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sbe3 vs Charlomanti: The Primal War</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SBE3 VS CHARLOMANTI - KOMBAT ARENA</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
-    @keyframes pulseGlow {
-      0%, 100% { filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.7)); }
-      50% { filter: drop-shadow(0 0 35px rgba(239, 68, 68, 0.9)); }
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Permanent+Marker&family=Orbitron:wght@700;900&display=swap');
+
+    body {
+      background-color: #050508;
+      font-family: 'Cinzel', serif;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow-x: hidden;
+      touch-action: manipulation;
     }
-    @keyframes altEgoAura {
-      0% { box-shadow: 0 0 20px #8b5cf6, inset 0 0 15px #c084fc; }
-      50% { box-shadow: 0 0 45px #ec4899, inset 0 0 25px #f43f5e; }
-      100% { box-shadow: 0 0 20px #8b5cf6, inset 0 0 15px #c084fc; }
+
+    .mk-title {
+      font-family: 'Cinzel', serif;
+      text-shadow: 0 0 20px #ef4444, 0 0 40px #b91c1c, 0 4px 0 #7f1d1d;
     }
-    @keyframes shake {
-      0% { transform: translate(0, 0); }
-      20% { transform: translate(-8px, 6px); }
-      40% { transform: translate(8px, -6px); }
-      60% { transform: translate(-5px, 3px); }
-      80% { transform: translate(5px, -3px); }
-      100% { transform: translate(0, 0); }
+
+    .arcade-font {
+      font-family: 'Orbitron', monospace;
     }
-    @keyframes floatDamage {
-      0% { opacity: 1; transform: translateY(0) scale(1); }
-      50% { transform: translateY(-30px) scale(1.3); }
-      100% { opacity: 0; transform: translateY(-60px) scale(0.9); }
+
+    .fatality-font {
+      font-family: 'Permanent Marker', cursive;
+      text-shadow: 0 0 30px #dc2626, 0 0 60px #991b1b, 0 5px 0 #450a0a;
     }
-    .shake-screen {
-      animation: shake 0.35s ease-in-out;
+
+    /* Screen Shake Animation */
+    @keyframes mkShake {
+      0% { transform: translate(0, 0) scale(1); }
+      20% { transform: translate(-10px, 8px) scale(1.02); }
+      40% { transform: translate(10px, -8px) scale(1.01); }
+      60% { transform: translate(-6px, 4px) scale(1.02); }
+      80% { transform: translate(6px, -4px) scale(1.01); }
+      100% { transform: translate(0, 0) scale(1); }
     }
-    .alt-ego-active {
-      animation: altEgoAura 1.5s infinite alternate;
+    .shake-impact {
+      animation: mkShake 0.3s cubic-bezier(.36,.07,.19,.97) both;
     }
-    .lion-glow {
-      animation: pulseGlow 2s infinite ease-in-out;
+
+    /* Blood Drips */
+    @keyframes bloodDrip {
+      0% { transform: translateY(-100%); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: translateY(120%); opacity: 0; }
     }
-    .floating-text {
-      animation: floatDamage 1s forwards ease-out;
+
+    /* Floating Hit Damage Numbers */
+    @keyframes hitFloat {
+      0% { opacity: 1; transform: translateY(0) scale(0.8); }
+      30% { transform: translateY(-25px) scale(1.4); }
+      100% { opacity: 0; transform: translateY(-55px) scale(1); }
+    }
+    .floating-dmg {
+      animation: hitFloat 0.75s forwards ease-out;
       pointer-events: none;
     }
-    /* Custom scrollbar for battle log */
-    ::-webkit-scrollbar {
-      width: 6px;
+
+    /* Glow Pulses */
+    @keyframes altEgoRage {
+      0%, 100% { filter: drop-shadow(0 0 15px #a855f7) drop-shadow(0 0 30px #ec4899); }
+      50% { filter: drop-shadow(0 0 35px #c084fc) drop-shadow(0 0 60px #f43f5e); }
     }
-    ::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
+    .alt-ego-flame {
+      animation: altEgoRage 0.8s infinite alternate;
     }
-    ::-webkit-scrollbar-thumb {
-      background: #475569;
-      border-radius: 4px;
+
+    canvas {
+      image-rendering: pixelated;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none overflow-x-hidden">
+<body class="bg-black text-slate-100 min-h-screen flex flex-col justify-between items-center select-none overflow-hidden">
 
-  <!-- Header Banner -->
-  <header class="border-b border-amber-500/20 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 px-4 py-3 shadow-lg shadow-black/50">
-    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <span class="text-3xl">🦁</span>
-        <div>
-          <h1 class="text-xl sm:text-2xl font-black tracking-wider bg-gradient-to-r from-amber-400 via-orange-400 to-rose-500 bg-clip-text text-transparent uppercase">
-            SBE3 <span class="text-slate-400 font-medium text-sm">VS</span> CHARLOMANTI
-          </h1>
-          <p class="text-xs text-slate-400">Lion Power & Alt Ego Charisma vs Jaguar Queen & Low Dock Hits</p>
+  <!-- TOP MK HEADER & HEALTH BARS -->
+  <header class="w-full max-w-6xl px-3 sm:px-6 pt-2 pb-1 z-30 flex flex-col gap-1">
+    
+    <!-- Top Bar Controls & Sound -->
+    <div class="flex items-center justify-between text-xs tracking-wider border-b border-red-900/40 pb-1">
+      <div class="flex items-center gap-2">
+        <span class="text-red-500 font-bold uppercase tracking-widest text-sm sm:text-base flex items-center gap-1">
+          <span class="text-xl">🐉</span> MORTAL KOMBAT: PRIMAL WAR
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="soundBtn" onclick="toggleAudio()" class="px-2.5 py-1 rounded bg-slate-900 border border-red-900/60 hover:bg-red-950/80 text-[11px] font-bold text-red-400 transition">
+          🔊 AUDIO: <span id="soundStatus" class="text-green-400">ON</span>
+        </button>
+        <button onclick="toggleAI()" id="aiToggleBtn" class="px-2.5 py-1 rounded bg-slate-900 border border-slate-700 hover:bg-slate-800 text-[11px] font-bold text-amber-400 transition">
+          CPU OPPONENT: <span id="aiStatus" class="text-green-400">ON</span>
+        </button>
+        <button onclick="resetMatch(true)" class="px-2.5 py-1 rounded bg-red-900/80 hover:bg-red-800 border border-red-500/50 text-[11px] font-bold text-white transition">
+          🔄 RESTART
+        </button>
+      </div>
+    </div>
+
+    <!-- MK Style Health Bars & Round Indicators -->
+    <div class="grid grid-cols-12 gap-2 sm:gap-4 items-center mt-1">
+      
+      <!-- SBE3 (P1) Health & Profile -->
+      <div class="col-span-5 flex flex-col gap-1">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl sm:text-2xl">🦁</span>
+            <div>
+              <span class="font-black text-sm sm:text-lg text-amber-400 tracking-wider uppercase">SBE3</span>
+              <span id="sbe3RageTag" class="hidden ml-1 px-1.5 py-0.2 text-[9px] font-bold bg-purple-900 text-purple-200 border border-purple-400 rounded animate-pulse">ALT EGO</span>
+            </div>
+          </div>
+          <!-- Round Wins Icons -->
+          <div id="p1Rounds" class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded-full border border-amber-500/50 bg-slate-900"></span>
+            <span class="w-3 h-3 rounded-full border border-amber-500/50 bg-slate-900"></span>
+          </div>
         </div>
-        <span class="text-3xl">🐆</span>
+
+        <!-- Health Gauge -->
+        <div class="w-full bg-slate-950 h-5 sm:h-6 p-0.5 border-2 border-amber-600/80 shadow-lg shadow-amber-950/40 relative skew-x-[-12deg] overflow-hidden">
+          <div id="p1HpBackdrop" class="absolute inset-0 bg-red-900/60 transition-all duration-700 w-full"></div>
+          <div id="p1HpBar" class="h-full bg-gradient-to-r from-emerald-500 via-amber-400 to-yellow-300 transition-all duration-150 w-full relative"></div>
+        </div>
+
+        <!-- Charisma / Super Gauge -->
+        <div class="flex items-center justify-between text-[10px] sm:text-xs text-amber-300/80 font-mono">
+          <span>✨ CHARISMA ULT</span>
+          <span id="p1SuperText" class="font-bold">0%</span>
+        </div>
+        <div class="w-full bg-slate-950 h-2 p-0.2 border border-amber-700/60 skew-x-[-12deg] overflow-hidden">
+          <div id="p1SuperBar" class="h-full bg-gradient-to-r from-amber-600 to-yellow-400 transition-all duration-200 w-0"></div>
+        </div>
       </div>
 
-      <!-- Mode & Sound controls -->
-      <div class="flex items-center gap-2 flex-wrap text-xs">
-        <button id="soundToggleBtn" onclick="toggleAudio()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 transition flex items-center gap-1 font-semibold">
-          🔊 Sound: <span id="soundStatusText" class="text-emerald-400">ON</span>
-        </button>
-        <button id="modeBtn" onclick="cycleMode()" class="px-3 py-1.5 rounded-lg bg-indigo-600/80 hover:bg-indigo-600 border border-indigo-400/40 transition font-semibold">
-          🎮 Mode: <span id="modeText">Player vs CPU</span>
-        </button>
-        <button onclick="resetBattle()" class="px-3 py-1.5 rounded-lg bg-rose-600/80 hover:bg-rose-600 border border-rose-400/40 transition font-semibold">
-          🔄 Rematch
-        </button>
+      <!-- Center Timer & Round Title -->
+      <div class="col-span-2 flex flex-col items-center justify-center">
+        <div id="matchTimer" class="arcade-font text-2xl sm:text-4xl font-black text-yellow-400 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)]">
+          99
+        </div>
+        <div id="roundText" class="text-[10px] sm:text-xs font-bold text-red-500 tracking-widest uppercase mt-0.5">
+          ROUND 1
+        </div>
       </div>
+
+      <!-- CHARLOMANTI (P2) Health & Profile -->
+      <div class="col-span-5 flex flex-col gap-1">
+        <div class="flex items-center justify-between">
+          <div id="p2Rounds" class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded-full border border-emerald-500/50 bg-slate-900"></span>
+            <span class="w-3 h-3 rounded-full border border-emerald-500/50 bg-slate-900"></span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <div>
+              <span id="charStanceTag" class="hidden mr-1 px-1.5 py-0.2 text-[9px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-400 rounded">CAMO</span>
+              <span class="font-black text-sm sm:text-lg text-emerald-400 tracking-wider uppercase">CHARLOMANTI</span>
+            </div>
+            <span class="text-xl sm:text-2xl">🐆</span>
+          </div>
+        </div>
+
+        <!-- Health Gauge -->
+        <div class="w-full bg-slate-950 h-5 sm:h-6 p-0.5 border-2 border-emerald-600/80 shadow-lg shadow-emerald-950/40 relative skew-x-[12deg] overflow-hidden flex justify-end">
+          <div id="p2HpBackdrop" class="absolute inset-0 bg-red-900/60 transition-all duration-700 w-full"></div>
+          <div id="p2HpBar" class="h-full bg-gradient-to-l from-emerald-500 via-teal-400 to-cyan-300 transition-all duration-150 w-full relative"></div>
+        </div>
+
+        <!-- Jaguar Focus / Super Gauge -->
+        <div class="flex items-center justify-between text-[10px] sm:text-xs text-emerald-300/80 font-mono">
+          <span id="p2SuperText" class="font-bold">0%</span>
+          <span>⚡ APEX JAGUAR ULT</span>
+        </div>
+        <div class="w-full bg-slate-950 h-2 p-0.2 border border-emerald-700/60 skew-x-[12deg] overflow-hidden flex justify-end">
+          <div id="p2SuperBar" class="h-full bg-gradient-to-l from-emerald-600 to-teal-400 transition-all duration-200 w-0"></div>
+        </div>
+      </div>
+
     </div>
   </header>
 
-  <!-- Main Combat Arena -->
-  <main id="arenaWrapper" class="flex-1 max-w-6xl w-full mx-auto p-3 sm:p-5 flex flex-col gap-4 relative">
+  <!-- MAIN CANVAS COMBAT ARENA -->
+  <main id="gameContainer" class="relative w-full max-w-6xl flex-1 flex items-center justify-center my-1 px-2">
     
-    <!-- Top HUD: Health & Energy Bars -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-2xl relative overflow-hidden backdrop-blur-sm">
-      <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-24 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+    <!-- Arena Canvas -->
+    <div class="relative w-full h-[380px] sm:h-[480px] md:h-[530px] rounded-xl border-2 border-red-950/80 shadow-2xl shadow-red-950/60 overflow-hidden bg-slate-950">
+      <canvas id="mkCanvas" width="960" height="540" class="w-full h-full block bg-black"></canvas>
 
-      <!-- Sbe3 HUD -->
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-2xl">👑</span>
-            <div>
-              <span class="font-black text-lg text-amber-400 uppercase tracking-wide">SBE3</span>
-              <span id="sbe3AltEgoBadge" class="hidden ml-2 px-2 py-0.5 text-[10px] font-bold rounded-full bg-purple-900 text-purple-200 border border-purple-400 animate-pulse">ALT EGO ACTIVE</span>
-            </div>
-          </div>
-          <span id="sbe3HpText" class="font-mono font-bold text-sm text-emerald-400">100 / 100 HP</span>
-        </div>
-        <!-- Health Bar -->
-        <div class="w-full bg-slate-950 h-5 rounded-full p-0.5 border border-slate-700/60 overflow-hidden relative">
-          <div id="sbe3HpBar" class="h-full bg-gradient-to-r from-emerald-500 via-amber-400 to-rose-500 rounded-full transition-all duration-300 w-full"></div>
-        </div>
-        <!-- Energy Bar (For Charisma Ult) -->
-        <div class="flex items-center justify-between text-xs text-slate-400">
-          <span>✨ Charisma Gauge</span>
-          <span id="sbe3EnergyText" class="font-mono text-amber-300">0%</span>
-        </div>
-        <div class="w-full bg-slate-950 h-2.5 rounded-full p-0.5 border border-slate-700/60 overflow-hidden">
-          <div id="sbe3EnergyBar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-300 rounded-full transition-all duration-300 w-0"></div>
-        </div>
-      </div>
-
-      <!-- VS Badge Center (Desktop) -->
-      <div class="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-800 border-2 border-amber-500 items-center justify-center font-black text-xs text-amber-300 shadow-lg shadow-black z-10">
-        VS
-      </div>
-
-      <!-- Charlomanti HUD -->
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center justify-between">
-          <span id="charHpText" class="font-mono font-bold text-sm text-emerald-400">100 / 100 HP</span>
-          <div class="flex items-center gap-2">
-            <span id="charStanceBadge" class="hidden mr-2 px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500">STEALTH POUNCE</span>
-            <span class="font-black text-lg text-emerald-400 uppercase tracking-wide">CHARLOMANTI</span>
-            <span class="text-2xl">🐾</span>
-          </div>
-        </div>
-        <!-- Health Bar -->
-        <div class="w-full bg-slate-950 h-5 rounded-full p-0.5 border border-slate-700/60 overflow-hidden relative flex justify-end">
-          <div id="charHpBar" class="h-full bg-gradient-to-l from-emerald-500 via-teal-400 to-rose-500 rounded-full transition-all duration-300 w-full"></div>
-        </div>
-        <!-- Energy Bar (For Apex Jaguar Ult) -->
-        <div class="flex items-center justify-between text-xs text-slate-400">
-          <span id="charEnergyText" class="font-mono text-emerald-300">0%</span>
-          <span>⚡ Jaguar Focus</span>
-        </div>
-        <div class="w-full bg-slate-950 h-2.5 rounded-full p-0.5 border border-slate-700/60 overflow-hidden flex justify-end">
-          <div id="charEnergyBar" class="h-full bg-gradient-to-l from-emerald-500 to-cyan-300 rounded-full transition-all duration-300 w-0"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Battle Stage Visual Area -->
-    <div id="battleStage" class="relative w-full h-80 sm:h-96 rounded-2xl border border-slate-800 bg-gradient-to-b from-slate-900 via-slate-950 to-amber-950/20 overflow-hidden flex items-end justify-between px-8 sm:px-20 pb-8 shadow-inner">
-      <!-- Background Ambient Glow & Arena Floor -->
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(180,83,9,0.12),transparent_70%)] pointer-events-none"></div>
-      <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-slate-900 to-transparent border-t border-slate-800/80"></div>
-      
-      <!-- Stage Decor: Torchlight / Arena totems -->
-      <div class="absolute bottom-16 left-6 text-xl opacity-60 animate-bounce">🔥</div>
-      <div class="absolute bottom-16 right-6 text-xl opacity-60 animate-bounce" style="animation-delay: 0.5s;">🔥</div>
-
-      <!-- Cinematic Ult Overlay -->
-      <div id="ultCutscene" class="absolute inset-0 z-30 bg-black/85 flex flex-col items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300">
-        <h2 id="ultTitle" class="text-4xl sm:text-6xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-rose-500 drop-shadow-2xl uppercase scale-75 transition-transform duration-300">
-          CHARISMA ULT!
-        </h2>
-        <p id="ultSubtitle" class="text-sm sm:text-lg text-slate-300 mt-2 font-semibold tracking-wider">
-          "Witness the Royal Lion King!"
+      <!-- Announcement Banner Overlay (ROUND 1, FIGHT, FINISH HIM, FATALITY) -->
+      <div id="announcementLayer" class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center z-20">
+        <h1 id="announcementText" class="text-4xl sm:text-7xl md:text-8xl font-black tracking-widest text-transparent uppercase transform scale-0 transition-all duration-200 drop-shadow-[0_10px_25px_rgba(0,0,0,0.9)]">
+          FIGHT!
+        </h1>
+        <p id="subAnnouncementText" class="text-sm sm:text-xl md:text-2xl font-bold text-yellow-400 tracking-wider uppercase mt-2 opacity-0 transition-opacity duration-300">
         </p>
       </div>
 
-      <!-- Floating Damage / Text Container -->
-      <div id="damageOverlay" class="absolute inset-0 pointer-events-none z-20"></div>
-
-      <!-- Fighter 1: Sbe3 -->
-      <div id="sbe3SpriteContainer" class="relative z-10 flex flex-col items-center transition-all duration-200">
-        <!-- Aura Ring -->
-        <div id="sbe3Aura" class="absolute -inset-4 rounded-full opacity-0 transition-opacity duration-300 pointer-events-none"></div>
-        
-        <!-- SVG Character Sbe3 -->
-        <div id="sbe3Graphic" class="w-36 h-44 sm:w-44 sm:h-52 relative flex items-center justify-center transition-transform duration-200">
-          <svg viewBox="0 0 200 240" class="w-full h-full drop-shadow-xl">
-            <!-- Lion Mane & Aura -->
-            <defs>
-              <radialGradient id="lionAuraGrad" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
-                <stop offset="70%" stop-color="#d97706" stop-opacity="0.4"/>
-                <stop offset="100%" stop-color="#b45309" stop-opacity="0"/>
-              </radialGradient>
-              <linearGradient id="maneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#f59e0b" />
-                <stop offset="50%" stop-color="#b45309" />
-                <stop offset="100%" stop-color="#78350f" />
-              </linearGradient>
-              <linearGradient id="altEgoMane" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#c084fc" />
-                <stop offset="50%" stop-color="#7e22ce" />
-                <stop offset="100%" stop-color="#3b0764" />
-              </linearGradient>
-            </defs>
-
-            <!-- Back Aura -->
-            <circle cx="100" cy="95" r="75" fill="url(#lionAuraGrad)" class="animate-pulse" />
-
-            <!-- Massive Lion Mane -->
-            <path id="sbe3Mane" d="M100,20 C130,15 160,35 170,65 C180,95 175,125 155,145 C135,165 100,165 80,165 C55,165 25,145 25,100 C25,60 55,25 100,20 Z" 
-                  fill="url(#maneGrad)" />
-
-            <!-- Alt Ego Spikes / Flares -->
-            <polygon id="sbe3Crown" points="75,25 85,5 100,20 115,5 125,25" fill="#facc15" stroke="#ca8a04" stroke-width="2" />
-
-            <!-- Sbe3 Muscular Torso -->
-            <path d="M65,145 L135,145 L145,210 L55,210 Z" fill="#9a3412" />
-            <!-- Golden Armor Plate / Belt -->
-            <rect x="75" y="160" width="50" height="25" rx="5" fill="#f59e0b" stroke="#78350f" stroke-width="2" />
-            <polygon points="100,165 108,180 92,180" fill="#fef08a" />
-
-            <!-- Head -->
-            <circle cx="100" cy="95" r="38" fill="#d97706" />
-
-            <!-- Lion Ears -->
-            <circle cx="70" cy="55" r="14" fill="#b45309" />
-            <circle cx="70" cy="55" r="8" fill="#fef3c7" />
-            <circle cx="130" cy="55" r="14" fill="#b45309" />
-            <circle cx="130" cy="55" r="8" fill="#fef3c7" />
-
-            <!-- Eyes (Glows red/purple during Alt Ego) -->
-            <ellipse id="sbe3EyeL" cx="86" cy="90" rx="6" ry="4" fill="#fef08a" />
-            <ellipse id="sbe3EyeR" cx="114" cy="90" rx="6" ry="4" fill="#fef08a" />
-            <circle id="sbe3PupilL" cx="87" cy="90" r="2.5" fill="#000" />
-            <circle id="sbe3PupilR" cx="113" cy="90" r="2.5" fill="#000" />
-
-            <!-- Snout & Whiskers -->
-            <ellipse cx="100" cy="106" rx="14" ry="10" fill="#fef3c7" />
-            <polygon points="100,103 94,98 106,98" fill="#78350f" />
-            <!-- Confident Charisma Smirk -->
-            <path id="sbe3Mouth" d="M92,110 Q100,118 108,110" stroke="#78350f" stroke-width="2.5" fill="none" stroke-linecap="round" />
-
-            <!-- Claws / Hands -->
-            <g id="sbe3HandL">
-              <circle cx="50" cy="165" r="14" fill="#b45309" />
-              <path d="M42,160 L40,150 M50,158 L50,148 M58,160 L60,150" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
-            </g>
-            <g id="sbe3HandR">
-              <circle cx="150" cy="165" r="14" fill="#b45309" />
-              <path d="M142,160 L140,150 M150,158 L150,148 M158,160 L160,150" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
-            </g>
-          </svg>
-        </div>
-
-        <span class="mt-2 text-xs font-black tracking-wider text-amber-400 uppercase bg-slate-900/90 px-3 py-1 rounded-full border border-amber-500/40">
-          Sbe3 🦁
-        </span>
+      <!-- Combo Counters on Sides -->
+      <div id="p1ComboDisplay" class="absolute top-12 left-6 pointer-events-none opacity-0 transition-opacity duration-150 flex flex-col">
+        <span id="p1ComboHits" class="arcade-font text-3xl sm:text-5xl font-black text-amber-400 italic drop-shadow-[0_0_15px_#f59e0b]">3 HITS</span>
+        <span id="p1ComboDmg" class="text-xs sm:text-sm font-bold text-red-400 uppercase tracking-widest">24% DAMAGE</span>
       </div>
 
-      <!-- Fighter 2: Charlomanti -->
-      <div id="charSpriteContainer" class="relative z-10 flex flex-col items-center transition-all duration-200">
-        <!-- Aura Ring -->
-        <div id="charAura" class="absolute -inset-4 rounded-full opacity-0 transition-opacity duration-300 pointer-events-none"></div>
-
-        <!-- SVG Character Charlomanti -->
-        <div id="charGraphic" class="w-36 h-44 sm:w-44 sm:h-52 relative flex items-center justify-center transition-transform duration-200">
-          <svg viewBox="0 0 200 240" class="w-full h-full drop-shadow-xl">
-            <!-- Jaguar Shadow Aura -->
-            <defs>
-              <radialGradient id="jaguarAuraGrad" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#10b981" stop-opacity="0.7"/>
-                <stop offset="70%" stop-color="#047857" stop-opacity="0.3"/>
-                <stop offset="100%" stop-color="#064e3b" stop-opacity="0"/>
-              </radialGradient>
-              <linearGradient id="jaguarCoat" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#f59e0b" />
-                <stop offset="40%" stop-color="#d97706" />
-                <stop offset="100%" stop-color="#78350f" />
-              </linearGradient>
-            </defs>
-
-            <!-- Shadow Aura -->
-            <circle cx="100" cy="95" r="75" fill="url(#jaguarAuraGrad)" class="animate-pulse" />
-
-            <!-- Sleek Wild Jaguar Hair -->
-            <path d="M100,20 C140,20 165,50 160,95 C155,140 140,170 120,180 C110,150 90,150 80,180 C60,170 45,140 40,95 C35,50 60,20 100,20 Z" 
-                  fill="#1e293b" />
-
-            <!-- Jaguar Ears with spots -->
-            <polygon points="65,30 50,60 80,55" fill="#d97706" stroke="#000" stroke-width="1.5" />
-            <polygon points="63,35 55,55 75,52" fill="#451a03" />
-            <polygon points="135,30 150,60 120,55" fill="#d97706" stroke="#000" stroke-width="1.5" />
-            <polygon points="137,35 145,55 125,52" fill="#451a03" />
-
-            <!-- Slender Athletic Body -->
-            <path d="M75,135 L125,135 L135,215 L65,215 Z" fill="#047857" />
-            <!-- Jaguar Spot Tattoos / Pattern -->
-            <ellipse cx="88" cy="155" rx="5" ry="3" fill="#0f172a" />
-            <ellipse cx="110" cy="165" rx="6" ry="4" fill="#0f172a" />
-            <ellipse cx="95" cy="185" rx="5" ry="3" fill="#0f172a" />
-            
-            <!-- Tail Swishing Behind -->
-            <path d="M135,195 Q170,180 175,140 Q180,110 165,115" stroke="#d97706" stroke-width="6" fill="none" stroke-linecap="round" />
-
-            <!-- Head -->
-            <circle cx="100" cy="90" r="34" fill="#fbbf24" />
-
-            <!-- Jaguar Face Mask / Warpaint -->
-            <path d="M75,85 L85,92 M125,85 L115,92 M73,95 L84,98 M127,95 L116,98" stroke="#064e3b" stroke-width="3" stroke-linecap="round" />
-
-            <!-- Piercing Emerald Cat Eyes -->
-            <ellipse id="charEyeL" cx="88" cy="85" rx="6" ry="5" fill="#34d399" />
-            <ellipse id="charEyeR" cx="112" cy="85" rx="6" ry="5" fill="#34d399" />
-            <polygon points="88,81 89,89 87,89" fill="#064e3b" />
-            <polygon points="112,81 113,89 111,89" fill="#064e3b" />
-
-            <!-- Nose & Fierce Fangs -->
-            <polygon points="100,94 96,90 104,90" fill="#e11d48" />
-            <path d="M94,101 Q100,105 106,101" stroke="#0f172a" stroke-width="2" fill="none" />
-            <polygon points="95,102 96,107 98,102" fill="#fff" />
-            <polygon points="105,102 104,107 102,102" fill="#fff" />
-
-            <!-- Low Dock Strike Legs / Claws -->
-            <g id="charLegL">
-              <rect x="70" y="200" width="16" height="25" rx="6" fill="#065f46" />
-              <path d="M68,225 L86,225" stroke="#34d399" stroke-width="3" stroke-linecap="round" />
-            </g>
-            <g id="charLegR">
-              <rect x="114" y="200" width="16" height="25" rx="6" fill="#065f46" />
-              <path d="M112,225 L130,225" stroke="#34d399" stroke-width="3" stroke-linecap="round" />
-            </g>
-          </svg>
-        </div>
-
-        <span class="mt-2 text-xs font-black tracking-wider text-emerald-400 uppercase bg-slate-900/90 px-3 py-1 rounded-full border border-emerald-500/40">
-          Charlomanti 🐆
-        </span>
-      </div>
-    </div>
-
-    <!-- Controls & Actions Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      
-      <!-- Sbe3 Command Panel -->
-      <div class="bg-slate-900/90 border border-amber-500/30 rounded-2xl p-4 shadow-xl flex flex-col gap-3">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-          <div class="flex items-center gap-2">
-            <span class="text-xl">🦁</span>
-            <span class="font-bold text-amber-400">Sbe3 Moves</span>
-          </div>
-          <span class="text-[11px] text-slate-400">Key: [A, S, D, F]</span>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <!-- Move 1: Lion Slash -->
-          <button onclick="playerMove('sbe3', 'slash')" class="group p-2.5 rounded-xl bg-slate-800 hover:bg-amber-950/60 border border-amber-500/40 text-left transition relative overflow-hidden">
-            <div class="font-bold text-xs text-amber-300 group-hover:text-amber-200">🐾 Lion Claw Strike</div>
-            <div class="text-[11px] text-slate-400 mt-0.5">Quick slash [A]</div>
-          </button>
-
-          <!-- Move 2: Roar of Sovereignty -->
-          <button onclick="playerMove('sbe3', 'roar')" class="group p-2.5 rounded-xl bg-slate-800 hover:bg-amber-950/60 border border-amber-500/40 text-left transition relative overflow-hidden">
-            <div class="font-bold text-xs text-amber-300 group-hover:text-amber-200">🗣️ Royal Roar</div>
-            <div class="text-[11px] text-slate-400 mt-0.5">Heavy shockwave [S]</div>
-          </button>
-
-          <!-- Move 3: Alt Ego Transformation -->
-          <button onclick="playerMove('sbe3', 'alt_ego')" class="group p-2.5 rounded-xl bg-purple-950/40 hover:bg-purple-900/50 border border-purple-500/50 text-left transition relative overflow-hidden">
-            <div class="font-bold text-xs text-purple-300 group-hover:text-purple-200 flex items-center justify-between">
-              <span>🎭 Alt Ego Shift</span>
-              <span id="altEgoCooldownText" class="text-[10px] text-purple-400">Ready</span>
-            </div>
-            <div class="text-[11px] text-slate-400 mt-0.5">Boost Atk & Rage [D]</div>
-          </button>
-
-          <!-- Move 4: Charisma Ult -->
-          <button id="sbe3UltBtn" onclick="playerMove('sbe3', 'ult')" class="group p-2.5 rounded-xl bg-gradient-to-r from-amber-600/40 to-yellow-600/40 hover:from-amber-600 hover:to-yellow-500 border border-yellow-400/60 text-left transition relative overflow-hidden disabled:opacity-40 disabled:pointer-events-none">
-            <div class="font-bold text-xs text-yellow-300 group-hover:text-yellow-100 flex items-center justify-between">
-              <span>👑 CHARISMA ULT</span>
-              <span class="text-[10px] font-mono bg-yellow-400/20 px-1 rounded text-yellow-300">100%</span>
-            </div>
-            <div class="text-[11px] text-slate-300 mt-0.5">Sultani Charisma Beam [F]</div>
-          </button>
-        </div>
+      <div id="p2ComboDisplay" class="absolute top-12 right-6 pointer-events-none opacity-0 transition-opacity duration-150 flex flex-col items-end">
+        <span id="p2ComboHits" class="arcade-font text-3xl sm:text-5xl font-black text-emerald-400 italic drop-shadow-[0_0_15px_#10b981]">4 HITS</span>
+        <span id="p2ComboDmg" class="text-xs sm:text-sm font-bold text-red-400 uppercase tracking-widest">32% DAMAGE</span>
       </div>
 
-      <!-- Charlomanti Command Panel -->
-      <div class="bg-slate-900/90 border border-emerald-500/30 rounded-2xl p-4 shadow-xl flex flex-col gap-3">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-          <div class="flex items-center gap-2">
-            <span class="text-xl">🐆</span>
-            <span class="font-bold text-emerald-400">Charlomanti Moves</span>
-          </div>
-          <span class="text-[11px] text-slate-400">Key: [H, J, K, L]</span>
-        </div>
+      <!-- Floating Damage / Text Layer -->
+      <div id="damageOverlay" class="absolute inset-0 pointer-events-none z-10 overflow-hidden"></div>
 
-        <div class="grid grid-cols-2 gap-2">
-          <!-- Move 1: Jaguar Pounce -->
-          <button onclick="playerMove('char', 'pounce')" class="group p-2.5 rounded-xl bg-slate-800 hover:bg-emerald-950/60 border border-emerald-500/40 text-left transition relative overflow-hidden">
-            <div class="font-bold text-xs text-emerald-300 group-hover:text-emerald-200">⚡ Jaguar Pounce</div>
-            <div class="text-[11px] text-slate-400 mt-0.5">Acrobatic leap [H]</div>
+      <!-- Finish Him / Fatality Button Prompts (When in Finish Him mode) -->
+      <div id="fatalityPrompt" class="hidden absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 bg-black/90 p-4 rounded-xl border-2 border-red-600 shadow-2xl animate-bounce">
+        <span class="fatality-font text-red-500 text-2xl tracking-widest">EXECUTE FATALITY!</span>
+        <div class="flex gap-3">
+          <button onclick="triggerFatality('sbe3')" class="px-4 py-2 bg-red-700 hover:bg-red-600 text-white font-black text-xs uppercase tracking-wider rounded border border-red-400">
+            🦁 SBE3: ALT EGO BEAST RIP
           </button>
-
-          <!-- Move 2: Low Dock Hits (Law Doc Hits) -->
-          <button onclick="playerMove('char', 'low_dock')" class="group p-2.5 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/60 border border-teal-400/50 text-left transition relative overflow-hidden">
-            <div class="font-bold text-xs text-teal-300 group-hover:text-teal-100">🥋 Law Doc Hits</div>
-            <div class="text-[11px] text-slate-400 mt-0.5">3x Low dock sweep [J]</div>
+          <button onclick="triggerFatality('char')" class="px-4 py-2 bg-emerald-800 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-wider rounded border border-emerald-400">
+            🐆 CHARLOMANTI: LAW DOC SPINE CRUSH
           </button>
-
-          <!-- Move 3: Shadow Camouflage -->
-          <button onclick="playerMove('char', 'camo')" class="group p-2.5 rounded-xl bg-slate-800 hover:bg-emerald-950/60 border border-emerald-500/40 text-left transition relative overflow-hidden">
-            <div class="font-bold text-xs text-emerald-300 group-hover:text-emerald-200 flex items-center justify-between">
-              <span>🌫️ Shadow Camo</span>
-              <span id="charCamoText" class="text-[10px] text-emerald-400">Ready</span>
-            </div>
-            <div class="text-[11px] text-slate-400 mt-0.5">Dodge & Crit Buff [K]</div>
-          </button>
-
-          <!-- Move 4: Jaguar Apex Ult -->
-          <button id="charUltBtn" onclick="playerMove('char', 'ult')" class="group p-2.5 rounded-xl bg-gradient-to-r from-emerald-600/40 to-teal-600/40 hover:from-emerald-600 hover:to-teal-500 border border-teal-400/60 text-left transition relative overflow-hidden disabled:opacity-40 disabled:pointer-events-none">
-            <div class="font-bold text-xs text-emerald-300 group-hover:text-emerald-100 flex items-center justify-between">
-              <span>🌪️ APEX JAGUAR ULT</span>
-              <span class="text-[10px] font-mono bg-emerald-400/20 px-1 rounded text-emerald-300">100%</span>
-            </div>
-            <div class="text-[11px] text-slate-300 mt-0.5">Phantom Slash Barrage [L]</div>
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Live Battle Commentary & Lore Box -->
-    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col gap-2">
-      <div class="flex items-center justify-between text-xs text-slate-400 border-b border-slate-800 pb-2">
-        <span class="font-semibold text-slate-300 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-          Live Arena Commentary & Battle Log
-        </span>
-        <button onclick="clearBattleLog()" class="hover:text-slate-200 text-[11px]">Clear Log</button>
-      </div>
-
-      <div id="battleLog" class="h-28 overflow-y-auto space-y-1.5 pr-1 text-xs font-mono">
-        <div class="text-amber-400 font-semibold">⚔️ The ancient war begins! Sbe3 steps into the arena roaring with royal charisma.</div>
-        <div class="text-emerald-400 font-semibold">🐆 Charlomanti stalks from the jungle canopy, readying her signature Law Doc Hits!</div>
-        <div class="text-slate-400">💡 Tip: Use Alt Ego to empower Sbe3's attacks, or use Charlomanti's Law Doc Hits for consecutive kicks!</div>
-      </div>
-    </div>
-
-    <!-- Lore / Character Details Carousel -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-400 bg-slate-900/40 border border-slate-800/80 rounded-xl p-4">
-      <div class="flex gap-3 items-start">
-        <div class="text-2xl p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">🦁</div>
-        <div>
-          <h4 class="font-bold text-amber-300 text-sm">Sbe3 (The Lion Sovereign)</h4>
-          <p class="mt-1 leading-relaxed">Blessed with the primordial spirit of the desert lion. When pushed to his limits, he invokes his <strong>Alt Ego</strong> (awakening his shadow-lion instincts) and unleashes his royal <strong>Charisma Ultimate</strong> that blinds and overwhelms all challengers!</p>
-        </div>
-      </div>
-      <div class="flex gap-3 items-start">
-        <div class="text-2xl p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20">🐆</div>
-        <div>
-          <h4 class="font-bold text-emerald-300 text-sm">Charlomanti (The Jaguar Huntress)</h4>
-          <p class="mt-1 leading-relaxed">Master of the ancient Mayan jaguar style. Famous for her devastating <strong>Low Dock Hits ("Law Doc Hits")</strong>—a swift flurry of low-sweeping kicks and ankle strikes that completely disorient heavily armored foes.</p>
         </div>
       </div>
     </div>
 
   </main>
 
-  <!-- Audio Synthesis Script (Web Audio API - No external dependencies) -->
+  <!-- ON-SCREEN CONTROLS & MOVE LIST (MOBILE & DESKTOP) -->
+  <footer class="w-full max-w-6xl px-3 pb-3 z-30">
+    <div class="bg-slate-950/95 border border-red-950/60 rounded-xl p-3 shadow-2xl backdrop-blur-md">
+      
+      <!-- Desktop Keybind Info & Mobile Switch -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+        
+        <!-- SBE3 Controls -->
+        <div class="flex flex-col gap-1 border-b md:border-b-0 md:border-r border-slate-800/80 pb-2 md:pb-0 md:pr-3">
+          <div class="flex items-center justify-between text-amber-400 font-bold uppercase">
+            <span>🦁 Sbe3 (P1 Controls)</span>
+            <span class="text-[10px] text-slate-500">Move: [A / D] Jump: [W] Crouch: [S]</span>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5 mt-1">
+            <button onmousedown="handleAction('p1', 'punch')" class="p-2 bg-slate-900 hover:bg-amber-950/60 border border-amber-600/40 rounded text-center active:scale-95 transition">
+              <span class="block font-bold text-amber-300">[J] Claw Punch</span>
+            </button>
+            <button onmousedown="handleAction('p1', 'kick')" class="p-2 bg-slate-900 hover:bg-amber-950/60 border border-amber-600/40 rounded text-center active:scale-95 transition">
+              <span class="block font-bold text-amber-300">[K] Lion Kick</span>
+            </button>
+            <button onmousedown="handleAction('p1', 'alt_ego')" class="p-2 bg-purple-950/60 hover:bg-purple-900 border border-purple-500/60 rounded text-center active:scale-95 transition">
+              <span class="block font-bold text-purple-300">[U] Alt Ego Shift</span>
+            </button>
+            <button id="p1UltButton" onmousedown="handleAction('p1', 'ult')" class="p-2 bg-yellow-950/70 hover:bg-yellow-800 border border-yellow-500/80 rounded text-center active:scale-95 transition disabled:opacity-40">
+              <span class="block font-bold text-yellow-300">[I] Charisma Ult!</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- CHARLOMANTI Controls -->
+        <div class="flex flex-col gap-1 md:pl-2">
+          <div class="flex items-center justify-between text-emerald-400 font-bold uppercase">
+            <span>🐆 Charlomanti (P2 / CPU)</span>
+            <span class="text-[10px] text-slate-500">Arrows: [← / → / ↑ / ↓]</span>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5 mt-1">
+            <button onmousedown="handleAction('p2', 'punch')" class="p-2 bg-slate-900 hover:bg-emerald-950/60 border border-emerald-600/40 rounded text-center active:scale-95 transition">
+              <span class="block font-bold text-emerald-300">[Num4] Claw Strike</span>
+            </button>
+            <button onmousedown="handleAction('p2', 'kick')" class="p-2 bg-teal-950/60 hover:bg-teal-900 border border-teal-500/60 rounded text-center active:scale-95 transition">
+              <span class="block font-bold text-teal-300">[Num5] Law Doc Hits!</span>
+            </button>
+            <button onmousedown="handleAction('p2', 'camo')" class="p-2 bg-slate-900 hover:bg-emerald-950/60 border border-emerald-600/40 rounded text-center active:scale-95 transition">
+              <span class="block font-bold text-emerald-300">[Num1] Camouflage</span>
+            </button>
+            <button id="p2UltButton" onmousedown="handleAction('p2', 'ult')" class="p-2 bg-emerald-950/80 hover:bg-emerald-800 border border-emerald-400/80 rounded text-center active:scale-95 transition disabled:opacity-40">
+              <span class="block font-bold text-cyan-300">[Num2] Apex Jaguar Ult!</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- SCRIPT: AUDIO SYNTHESIZER & MORTAL KOMBAT GAME ENGINE -->
   <script>
-    // Audio Context Setup
+    // ==========================================
+    // 1. PROCEDURAL SOUND SYNTHESIZER (MK STYLE)
+    // ==========================================
     let audioCtx = null;
     let soundEnabled = true;
 
@@ -478,570 +303,1197 @@
 
     function toggleAudio() {
       soundEnabled = !soundEnabled;
-      const statusText = document.getElementById('soundStatusText');
-      if (soundEnabled) {
-        statusText.textContent = 'ON';
-        statusText.className = 'text-emerald-400';
-        playBeep(440, 0.1, 'sine');
-      } else {
-        statusText.textContent = 'OFF';
-        statusText.className = 'text-rose-400';
-      }
+      const status = document.getElementById('soundStatus');
+      status.textContent = soundEnabled ? 'ON' : 'OFF';
+      status.className = soundEnabled ? 'text-green-400' : 'text-red-400';
+      if (soundEnabled) speakAnnouncer('Mortal Kombat!');
     }
 
-    function playBeep(freq, duration, type = 'sine', gainVal = 0.15) {
+    // Voice Announcer using SpeechSynthesis (if supported) + fallback synth
+    function speakAnnouncer(text) {
       if (!soundEnabled) return;
-      initAudio();
-      try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      } catch (e) {
-        console.warn(e);
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.pitch = 0.55; // Deep demon/announcer voice
+        utter.rate = 0.95;
+        utter.volume = 1;
+        window.speechSynthesis.speak(utter);
       }
+      // Add heavy synthesized sub-gong
+      playGong(85, 0.8);
     }
 
-    function playPunchSound() {
+    function playGong(freq, duration) {
       if (!soundEnabled) return;
       initAudio();
       try {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(140, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.15);
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + duration);
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.15);
+        osc.stop(audioCtx.currentTime + duration);
       } catch (e) {}
     }
 
-    function playRoarSound() {
+    function playPunchSFX() {
       if (!soundEnabled) return;
       initAudio();
       try {
-        // Multi-frequency roar simulation
-        [80, 110, 150].forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+      } catch (e) {}
+    }
+
+    function playHeavyHitSFX() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        // Crunch / Bone snap frequency pair
+        [90, 160].forEach((f, idx) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-          osc.frequency.linearRampToValueAtTime(freq * 1.5, audioCtx.currentTime + 0.2);
-          osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.5);
-          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+          osc.type = idx === 0 ? 'square' : 'sawtooth';
+          osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(25, audioCtx.currentTime + 0.25);
+          gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
           osc.connect(gain);
           gain.connect(audioCtx.destination);
           osc.start();
-          osc.stop(audioCtx.currentTime + 0.5);
+          osc.stop(audioCtx.currentTime + 0.25);
         });
       } catch (e) {}
     }
 
-    function playCharismaUltSound() {
+    function playLawDocSweepSFX() {
       if (!soundEnabled) return;
       initAudio();
       try {
-        // Royal fanfare chimes
-        [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
-          setTimeout(() => {
-            playBeep(f, 0.4, 'triangle', 0.25);
-          }, i * 90);
-        });
-        setTimeout(() => {
-          playBeep(180, 0.8, 'sawtooth', 0.4);
-        }, 400);
-      } catch (e) {}
-    }
-
-    function playLowDockSound() {
-      if (!soundEnabled) return;
-      initAudio();
-      try {
-        // Quick 3-hit whoosh & snap
-        [0, 90, 180].forEach((delay, idx) => {
+        // 3 rapid swooshing snaps
+        [0, 80, 160].forEach((delay, i) => {
           setTimeout(() => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(320 - (idx * 40), audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(90, audioCtx.currentTime + 0.08);
-            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+            osc.frequency.setValueAtTime(450 - (i * 60), audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.09);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.09);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.08);
+            osc.stop(audioCtx.currentTime + 0.09);
           }, delay);
         });
       } catch (e) {}
     }
 
-    // Battle State Management
-    const state = {
-      sbe3: {
-        hp: 100,
-        maxHp: 100,
-        energy: 25,
-        altEgo: false,
-        altEgoTurns: 0,
-        atkBuff: 1
-      },
-      char: {
-        hp: 100,
-        maxHp: 100,
-        energy: 25,
-        camo: false,
-        camoTurns: 0
-      },
-      mode: 'pvp_cpu', // 'pvp_cpu', 'cpu_char', 'auto', 'local_2p'
-      gameOver: false,
-      turnLock: false
+    function playAltEgoRoarSFX() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        [100, 140, 220].forEach((f) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+          osc.frequency.linearRampToValueAtTime(f * 1.6, audioCtx.currentTime + 0.3);
+          osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.7);
+          gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.7);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.7);
+        });
+      } catch (e) {}
+    }
+
+    function playCharismaUltSFX() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        [440, 554, 659, 880, 1108].forEach((f, i) => {
+          setTimeout(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
+          }, i * 70);
+        });
+        setTimeout(() => playHeavyHitSFX(), 400);
+      } catch (e) {}
+    }
+
+    // ==========================================
+    // 2. MORTAL KOMBAT 2D CANVAS ENGINE
+    // ==========================================
+    const canvas = document.getElementById('mkCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Particle system (Blood, Hit Sparks, Fiery Embers, Charisma Rays)
+    const particles = [];
+    class Particle {
+      constructor(x, y, vx, vy, color, size, life, isBlood = false) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.color = color;
+        this.size = size;
+        this.life = life;
+        this.maxLife = life;
+        this.isBlood = isBlood;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.isBlood) {
+          this.vy += 0.45; // Gravity
+          if (this.y > 450) {
+            this.y = 450;
+            this.vx = 0;
+            this.vy = 0;
+          }
+        } else {
+          this.vy += 0.15;
+        }
+        this.life--;
+      }
+      draw(c) {
+        c.save();
+        c.globalAlpha = Math.max(0, this.life / this.maxLife);
+        c.fillStyle = this.color;
+        c.beginPath();
+        c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+      }
+    }
+
+    function spawnHitSparks(x, y, color = '#facc15', count = 12) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2 + Math.random() * 7;
+        particles.push(new Particle(
+          x, y,
+          Math.cos(angle) * speed,
+          Math.sin(angle) * speed,
+          color,
+          2 + Math.random() * 3,
+          15 + Math.random() * 15
+        ));
+      }
+    }
+
+    function spawnBlood(x, y, count = 20) {
+      for (let i = 0; i < count; i++) {
+        const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.5;
+        const speed = 3 + Math.random() * 8;
+        particles.push(new Particle(
+          x, y,
+          Math.cos(angle) * speed,
+          Math.sin(angle) * speed,
+          Math.random() > 0.3 ? '#dc2626' : '#7f1d1d',
+          2 + Math.random() * 3.5,
+          35 + Math.random() * 30,
+          true
+        ));
+      }
+    }
+
+    // Fighter Class
+    class Fighter {
+      constructor(id, name, x, y, facing, colorTheme) {
+        this.id = id;
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.baseY = 440;
+        this.vx = 0;
+        this.vy = 0;
+        this.facing = facing; // 1 = facing right, -1 = facing left
+        this.colorTheme = colorTheme;
+
+        // Stats
+        this.hp = 100;
+        this.maxHp = 100;
+        this.superGauge = 20;
+        this.roundWins = 0;
+
+        // States
+        this.state = 'idle'; // idle, walk, jump, crouch, punch, kick, ult, hurt, knockdown, dead
+        this.stateTimer = 0;
+        this.isGrounded = true;
+        this.isBlocking = false;
+
+        // Sbe3 specifics
+        this.altEgo = false;
+        this.altEgoTimer = 0;
+
+        // Charlomanti specifics
+        this.camo = false;
+        this.camoTimer = 0;
+
+        // Combo counter
+        this.comboCount = 0;
+        this.comboDmg = 0;
+        this.comboTimer = 0;
+      }
+
+      update(opponent) {
+        // Horizontal Movement
+        this.x += this.vx;
+        if (this.x < 80) this.x = 80;
+        if (this.x > 880) this.x = 880;
+
+        // Vertical Movement (Gravity & Jumping)
+        this.y += this.vy;
+        if (this.y < this.baseY) {
+          this.vy += 0.95; // gravity
+          this.isGrounded = false;
+        } else {
+          this.y = this.baseY;
+          this.vy = 0;
+          this.isGrounded = true;
+          if (this.state === 'jump') this.state = 'idle';
+        }
+
+        // Auto facing opponent
+        if (this.state !== 'dead' && this.state !== 'knockdown' && gameState.status === 'fighting') {
+          this.facing = this.x < opponent.x ? 1 : -1;
+        }
+
+        // State timer tick
+        if (this.stateTimer > 0) {
+          this.stateTimer--;
+          if (this.stateTimer <= 0) {
+            if (this.state === 'punch' || this.state === 'kick' || this.state === 'hurt' || this.state === 'ult') {
+              this.state = 'idle';
+            }
+          }
+        }
+
+        // Alt Ego timer
+        if (this.altEgo) {
+          this.altEgoTimer--;
+          // Spawn fiery purple aura particles
+          if (Math.random() < 0.6) {
+            particles.push(new Particle(
+              this.x + (Math.random() - 0.5) * 50,
+              this.y - 40 + (Math.random() - 0.5) * 60,
+              (Math.random() - 0.5) * 2,
+              -1.5 - Math.random() * 2,
+              Math.random() > 0.5 ? '#c084fc' : '#f43f5e',
+              2 + Math.random() * 3,
+              25
+            ));
+          }
+          if (this.altEgoTimer <= 0) {
+            this.altEgo = false;
+            document.getElementById('sbe3RageTag').classList.add('hidden');
+          }
+        }
+
+        // Camo timer
+        if (this.camo) {
+          this.camoTimer--;
+          if (this.camoTimer <= 0) {
+            this.camo = false;
+            document.getElementById('charStanceTag').classList.add('hidden');
+          }
+        }
+
+        // Combo decay timer
+        if (this.comboTimer > 0) {
+          this.comboTimer--;
+          if (this.comboTimer <= 0) {
+            this.comboCount = 0;
+            this.comboDmg = 0;
+            const display = document.getElementById(this.id === 'p1' ? 'p1ComboDisplay' : 'p2ComboDisplay');
+            display.style.opacity = '0';
+          }
+        }
+      }
+
+      draw(c) {
+        c.save();
+        c.translate(this.x, this.y);
+        c.scale(this.facing, 1);
+
+        // Alpha for Camo
+        if (this.camo) {
+          c.globalAlpha = 0.35;
+        }
+
+        // Draw shadow on ground
+        c.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        c.beginPath();
+        c.ellipse(0, 0, 42, 10, 0, 0, Math.PI * 2);
+        c.fill();
+
+        // Check which fighter to render
+        if (this.id === 'p1') {
+          this.drawSbe3(c);
+        } else {
+          this.drawCharlomanti(c);
+        }
+
+        c.restore();
+      }
+
+      // SBE3 DRAW ROUTINE (LION WARRIOR)
+      drawSbe3(c) {
+        const isPunch = this.state === 'punch';
+        const isKick = this.state === 'kick';
+        const isCrouch = this.state === 'crouch';
+        const isHurt = this.state === 'hurt';
+        const isUlt = this.state === 'ult';
+
+        const headY = isCrouch ? -50 : -95;
+        const torsoY = isCrouch ? -20 : -55;
+
+        // Alt Ego Flaming Aura
+        if (this.altEgo) {
+          c.save();
+          c.shadowColor = '#c084fc';
+          c.shadowBlur = 35;
+          c.strokeStyle = '#f43f5e';
+          c.lineWidth = 4;
+          c.strokeRect(-35, headY - 35, 70, 110);
+          c.restore();
+        }
+
+        // Charisma Golden Radiance during Ult
+        if (isUlt) {
+          c.save();
+          c.fillStyle = 'rgba(250, 204, 21, 0.35)';
+          c.beginPath();
+          c.arc(0, headY, 80, 0, Math.PI * 2);
+          c.fill();
+          c.restore();
+        }
+
+        // Lion Legs
+        c.fillStyle = '#78350f';
+        if (isKick) {
+          // Dynamic extended kick
+          c.fillRect(-15, -35, 18, 35);
+          c.fillStyle = '#b45309';
+          c.fillRect(0, -55, 65, 20); // extended lion kick leg
+          c.fillStyle = '#facc15';
+          c.beginPath();
+          c.moveTo(65, -55);
+          c.lineTo(75, -45);
+          c.lineTo(65, -35);
+          c.fill(); // gold claw foot
+        } else if (isCrouch) {
+          c.fillRect(-22, -25, 20, 25);
+          c.fillRect(5, -25, 20, 25);
+        } else {
+          c.fillRect(-20, -35, 18, 35);
+          c.fillRect(4, -35, 18, 35);
+        }
+
+        // Muscular Torso & Royal Armor
+        c.fillStyle = this.altEgo ? '#581c87' : '#9a3412';
+        c.fillRect(-25, torsoY, 50, 42);
+
+        // Golden Royal Chestplate
+        c.fillStyle = '#f59e0b';
+        c.fillRect(-18, torsoY + 4, 36, 20);
+        c.fillStyle = '#fef08a';
+        c.beginPath();
+        c.moveTo(0, torsoY + 6);
+        c.lineTo(8, torsoY + 20);
+        c.lineTo(-8, torsoY + 20);
+        c.fill();
+
+        // Giant Lion Mane
+        c.fillStyle = this.altEgo ? '#7e22ce' : '#d97706';
+        c.beginPath();
+        c.arc(0, headY, 38, 0, Math.PI * 2);
+        c.fill();
+
+        // Head
+        c.fillStyle = '#b45309';
+        c.beginPath();
+        c.arc(0, headY, 26, 0, Math.PI * 2);
+        c.fill();
+
+        // Crown / Spikes
+        c.fillStyle = '#facc15';
+        c.beginPath();
+        c.moveTo(-20, headY - 26);
+        c.lineTo(-12, headY - 42);
+        c.lineTo(0, headY - 30);
+        c.lineTo(12, headY - 42);
+        c.lineTo(20, headY - 26);
+        c.fill();
+
+        // Fierce Glowing Eyes
+        c.fillStyle = this.altEgo ? '#f43f5e' : (isHurt ? '#ef4444' : '#fef08a');
+        c.fillRect(6, headY - 8, 8, 5);
+        c.fillRect(-14, headY - 8, 8, 5);
+
+        // Snout
+        c.fillStyle = '#fef3c7';
+        c.beginPath();
+        c.ellipse(0, headY + 7, 10, 8, 0, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#78350f';
+        c.fillRect(-4, headY + 3, 8, 5); // nose
+
+        // Claws & Arms
+        c.fillStyle = '#b45309';
+        if (isPunch) {
+          // Punch extended forward
+          c.fillRect(5, torsoY + 6, 55, 16);
+          c.fillStyle = '#facc15';
+          c.fillRect(56, torsoY + 3, 15, 22); // Golden Lion Fist
+        } else {
+          c.fillRect(15, torsoY + 8, 16, 26);
+          c.fillRect(-28, torsoY + 8, 16, 26);
+        }
+      }
+
+      // CHARLOMANTI DRAW ROUTINE (JAGUAR HUNTRESS)
+      drawCharlomanti(c) {
+        const isPunch = this.state === 'punch';
+        const isKick = this.state === 'kick';
+        const isCrouch = this.state === 'crouch';
+        const isHurt = this.state === 'hurt';
+        const isUlt = this.state === 'ult';
+
+        const headY = isCrouch ? -48 : -92;
+        const torsoY = isCrouch ? -20 : -52;
+
+        // Shadow Camo Trail / Apex Ult Aura
+        if (isUlt) {
+          c.save();
+          c.fillStyle = 'rgba(16, 185, 129, 0.4)';
+          c.beginPath();
+          c.arc(0, headY, 80, 0, Math.PI * 2);
+          c.fill();
+          c.restore();
+        }
+
+        // Swishing Jaguar Tail
+        c.strokeStyle = '#d97706';
+        c.lineWidth = 6;
+        c.beginPath();
+        c.moveTo(-18, torsoY + 30);
+        c.quadraticCurveTo(-45, torsoY + 15, -40, torsoY - 10);
+        c.stroke();
+
+        // Legs / Law Doc Kick Mechanics
+        c.fillStyle = '#065f46';
+        if (isKick) {
+          // LOW DOCK SWEEP POSE (Hits extremely low to the ankles)
+          c.fillStyle = '#047857';
+          c.fillRect(-15, -20, 18, 20);
+          c.fillStyle = '#10b981';
+          c.fillRect(0, -14, 75, 16); // sweeping low kick leg
+          c.fillStyle = '#34d399';
+          c.beginPath();
+          c.moveTo(75, -14);
+          c.lineTo(85, -6);
+          c.lineTo(75, 2);
+          c.fill(); // sharp claw foot sweep
+        } else if (isCrouch) {
+          c.fillRect(-20, -24, 18, 24);
+          c.fillRect(4, -24, 18, 24);
+        } else {
+          c.fillRect(-18, -35, 16, 35);
+          c.fillRect(4, -35, 16, 35);
+        }
+
+        // Slender Athletic Torso & Armor
+        c.fillStyle = '#047857';
+        c.fillRect(-20, torsoY, 40, 40);
+
+        // Jaguar Spots on Torso
+        c.fillStyle = '#0f172a';
+        c.beginPath();
+        c.arc(-8, torsoY + 10, 4, 0, Math.PI * 2);
+        c.arc(8, torsoY + 18, 4, 0, Math.PI * 2);
+        c.arc(-4, torsoY + 28, 3.5, 0, Math.PI * 2);
+        c.fill();
+
+        // Jaguar Hair & Ears
+        c.fillStyle = '#0f172a';
+        c.beginPath();
+        c.arc(0, headY, 30, 0, Math.PI * 2);
+        c.fill();
+
+        // Pointy Jaguar Ears
+        c.fillStyle = '#d97706';
+        c.beginPath();
+        c.moveTo(-16, headY - 20);
+        c.lineTo(-24, headY - 38);
+        c.lineTo(-6, headY - 24);
+        c.fill();
+        c.beginPath();
+        c.moveTo(16, headY - 20);
+        c.lineTo(24, headY - 38);
+        c.lineTo(6, headY - 24);
+        c.fill();
+
+        // Face & Emerald Eyes
+        c.fillStyle = '#fbbf24';
+        c.beginPath();
+        c.arc(0, headY, 22, 0, Math.PI * 2);
+        c.fill();
+
+        // Jaguar Mask Stripes
+        c.fillStyle = '#064e3b';
+        c.fillRect(-14, headY - 2, 7, 3);
+        c.fillRect(7, headY - 2, 7, 3);
+
+        // Glowing Cat Eyes
+        c.fillStyle = isHurt ? '#ef4444' : '#34d399';
+        c.fillRect(-11, headY - 6, 7, 5);
+        c.fillRect(4, headY - 6, 7, 5);
+
+        // Slender Arms & Claws
+        c.fillStyle = '#065f46';
+        if (isPunch) {
+          c.fillRect(5, torsoY + 6, 52, 14);
+          c.fillStyle = '#34d399';
+          c.fillRect(54, torsoY + 2, 14, 20); // Jaguar Razor Claw
+        } else {
+          c.fillRect(12, torsoY + 6, 14, 24);
+          c.fillRect(-24, torsoY + 6, 14, 24);
+        }
+      }
+    }
+
+    // ==========================================
+    // 3. GAME STATE & MATCH LOGIC
+    // ==========================================
+    const p1 = new Fighter('p1', 'Sbe3', 250, 440, 1, '#f59e0b');
+    const p2 = new Fighter('p2', 'Charlomanti', 710, 440, -1, '#10b981');
+
+    const gameState = {
+      status: 'intro', // intro, fighting, finish_him, fatality, round_over, match_over
+      round: 1,
+      maxRounds: 3,
+      timer: 99,
+      timerInterval: null,
+      cpuEnabled: true,
+      lastHitTime: 0
     };
 
-    const modes = [
-      { id: 'pvp_cpu', label: 'Play as Sbe3 (vs CPU)' },
-      { id: 'cpu_char', label: 'Play as Charlomanti (vs CPU)' },
-      { id: 'auto', label: 'War Simulation (Spectator)' },
-      { id: 'local_2p', label: '2-Player Local Duel' }
-    ];
-    let modeIndex = 0;
+    // Keyboard keys tracking
+    const keys = {};
+    window.addEventListener('keydown', (e) => {
+      initAudio();
+      keys[e.key.toLowerCase()] = true;
+      handleKeyboard(e.key.toLowerCase());
+    });
+    window.addEventListener('keyup', (e) => {
+      keys[e.key.toLowerCase()] = false;
+      if (e.key.toLowerCase() === 'a' || e.key.toLowerCase() === 'd') {
+        if (p1.state === 'walk') p1.state = 'idle';
+        p1.vx = 0;
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        if (!gameState.cpuEnabled && p2.state === 'walk') p2.state = 'idle';
+        p2.vx = 0;
+      }
+      if (e.key.toLowerCase() === 's') {
+        if (p1.state === 'crouch') p1.state = 'idle';
+      }
+      if (e.key === 'ArrowDown') {
+        if (!gameState.cpuEnabled && p2.state === 'crouch') p2.state = 'idle';
+      }
+    });
 
-    function cycleMode() {
-      modeIndex = (modeIndex + 1) % modes.length;
-      state.mode = modes[modeIndex].id;
-      document.getElementById('modeText').textContent = modes[modeIndex].label;
-      addLog(`🎮 Mode changed to: ${modes[modeIndex].label}`, 'text-indigo-400');
-      if (state.mode === 'auto' && !state.gameOver) {
-        startAutoCombat();
+    function handleKeyboard(k) {
+      if (gameState.status !== 'fighting') return;
+
+      // Sbe3 (P1)
+      if (k === 'w' && p1.isGrounded) {
+        p1.vy = -18;
+        p1.state = 'jump';
+      }
+      if (k === 's') p1.state = 'crouch';
+      if (k === 'a') { p1.vx = -5; p1.state = 'walk'; }
+      if (k === 'd') { p1.vx = 5; p1.state = 'walk'; }
+      if (k === 'j') handleAction('p1', 'punch');
+      if (k === 'k') handleAction('p1', 'kick');
+      if (k === 'u') handleAction('p1', 'alt_ego');
+      if (k === 'i') handleAction('p1', 'ult');
+
+      // Charlomanti (P2 if manual 2P mode)
+      if (!gameState.cpuEnabled) {
+        if (k === 'arrowup' && p2.isGrounded) { p2.vy = -18; p2.state = 'jump'; }
+        if (k === 'arrowdown') p2.state = 'crouch';
+        if (k === 'arrowleft') { p2.vx = -5; p2.state = 'walk'; }
+        if (k === 'arrowright') { p2.vx = 5; p2.state = 'walk'; }
+        if (k === '4') handleAction('p2', 'punch');
+        if (k === '5') handleAction('p2', 'kick');
+        if (k === '1') handleAction('p2', 'camo');
+        if (k === '2') handleAction('p2', 'ult');
       }
     }
 
-    let autoCombatTimer = null;
-    function startAutoCombat() {
-      if (autoCombatTimer) clearInterval(autoCombatTimer);
-      autoCombatTimer = setInterval(() => {
-        if (state.mode !== 'auto' || state.gameOver) {
-          clearInterval(autoCombatTimer);
-          return;
+    function toggleAI() {
+      gameState.cpuEnabled = !gameState.cpuEnabled;
+      const status = document.getElementById('aiStatus');
+      status.textContent = gameState.cpuEnabled ? 'ON' : 'OFF (2P)';
+      status.className = gameState.cpuEnabled ? 'text-green-400' : 'text-amber-400';
+    }
+
+    // Execute Move / Strike
+    function handleAction(fighterId, action) {
+      initAudio();
+      const attacker = fighterId === 'p1' ? p1 : p2;
+      const defender = fighterId === 'p1' ? p2 : p1;
+
+      if (attacker.state === 'dead' || attacker.state === 'knockdown') return;
+      if (gameState.status !== 'fighting' && gameState.status !== 'finish_him') return;
+
+      // PUNCH
+      if (action === 'punch') {
+        attacker.state = 'punch';
+        attacker.stateTimer = 14;
+        playPunchSFX();
+
+        // Check Hitbox Collision
+        const dist = Math.abs(attacker.x - defender.x);
+        if (dist < 110) {
+          applyDamage(attacker, defender, 10, 'PUNCH', '#f59e0b');
         }
-        // Randomly pick a move for Sbe3 then Charlomanti
-        const sMoves = ['slash', 'roar'];
-        if (state.sbe3.energy >= 100) sMoves.push('ult');
-        if (!state.sbe3.altEgo) sMoves.push('alt_ego');
-        const randomS = sMoves[Math.floor(Math.random() * sMoves.length)];
-        playerMove('sbe3', randomS);
-
-        setTimeout(() => {
-          if (state.gameOver) return;
-          const cMoves = ['pounce', 'low_dock'];
-          if (state.char.energy >= 100) cMoves.push('ult');
-          if (!state.char.camo) cMoves.push('camo');
-          const randomC = cMoves[Math.floor(Math.random() * cMoves.length)];
-          playerMove('char', randomC);
-        }, 1200);
-      }, 2600);
-    }
-
-    function addLog(text, colorClass = 'text-slate-300') {
-      const log = document.getElementById('battleLog');
-      const entry = document.createElement('div');
-      entry.className = `${colorClass} transition-opacity duration-200`;
-      entry.innerHTML = text;
-      log.appendChild(entry);
-      log.scrollTop = log.scrollHeight;
-    }
-
-    function clearBattleLog() {
-      document.getElementById('battleLog').innerHTML = '';
-      addLog('⚔️ Battle log cleared.', 'text-slate-500');
-    }
-
-    function showDamageNumber(target, text, color = '#f59e0b') {
-      const overlay = document.getElementById('damageOverlay');
-      const el = document.createElement('div');
-      el.className = 'absolute text-lg sm:text-2xl font-black floating-text';
-      el.style.color = color;
-      
-      const isSbe3 = target === 'sbe3';
-      el.style.left = isSbe3 ? '22%' : '72%';
-      el.style.bottom = '45%';
-      el.textContent = text;
-      
-      overlay.appendChild(el);
-      setTimeout(() => el.remove(), 1000);
-    }
-
-    function triggerScreenShake() {
-      const arena = document.getElementById('arenaWrapper');
-      arena.classList.remove('shake-screen');
-      void arena.offsetWidth; // trigger reflow
-      arena.classList.add('shake-screen');
-      setTimeout(() => arena.classList.remove('shake-screen'), 350);
-    }
-
-    function triggerUltCutscene(title, subtitle, charType) {
-      const cutscene = document.getElementById('ultCutscene');
-      const ultTitle = document.getElementById('ultTitle');
-      const ultSubtitle = document.getElementById('ultSubtitle');
-
-      ultTitle.textContent = title;
-      ultSubtitle.textContent = `"${subtitle}"`;
-
-      if (charType === 'sbe3') {
-        ultTitle.className = 'text-4xl sm:text-6xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-rose-500 drop-shadow-2xl uppercase transition-transform duration-300';
-      } else {
-        ultTitle.className = 'text-4xl sm:text-6xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-400 to-cyan-400 drop-shadow-2xl uppercase transition-transform duration-300';
       }
 
-      cutscene.classList.remove('opacity-0');
-      cutscene.classList.add('opacity-100');
-      ultTitle.classList.remove('scale-75');
-      ultTitle.classList.add('scale-110');
+      // KICK (Sbe3 Lion Kick / Charlomanti signature Law Doc Hits)
+      else if (action === 'kick') {
+        attacker.state = 'kick';
+        attacker.stateTimer = 18;
+
+        if (attacker.id === 'p2') {
+          // CHARLOMANTI: LAW DOC HITS! (3-hit rapid low sweep)
+          playLawDocSweepSFX();
+          const dist = Math.abs(attacker.x - defender.x);
+          if (dist < 125) {
+            applyDamage(attacker, defender, 8, 'LAW DOC 1', '#14b8a6');
+            setTimeout(() => {
+              if (defender.hp > 0) applyDamage(attacker, defender, 8, 'LAW DOC 2', '#14b8a6');
+            }, 90);
+            setTimeout(() => {
+              if (defender.hp > 0) {
+                applyDamage(attacker, defender, 10, 'LAW DOC CRIT!', '#2dd4bf');
+                // Knockdown defender
+                defender.vy = -6;
+                defender.vx = attacker.facing * 8;
+                triggerScreenShake();
+              }
+            }, 180);
+          }
+        } else {
+          // SBE3: Lion Kick
+          playPunchSFX();
+          const dist = Math.abs(attacker.x - defender.x);
+          if (dist < 115) {
+            applyDamage(attacker, defender, 14, 'LION KICK', '#f59e0b');
+          }
+        }
+      }
+
+      // SBE3: ALT EGO SHIFT
+      else if (action === 'alt_ego' && attacker.id === 'p1') {
+        if (!attacker.altEgo) {
+          attacker.altEgo = true;
+          attacker.altEgoTimer = 350; // ~6 seconds
+          playAltEgoRoarSFX();
+          speakAnnouncer('Alt Ego Unleashed!');
+          document.getElementById('sbe3RageTag').classList.remove('hidden');
+          showFloatingText(attacker.x, attacker.y - 80, 'ALT EGO +60% ATK!', '#c084fc');
+          triggerScreenShake();
+        }
+      }
+
+      // CHARLOMANTI: CAMO
+      else if (action === 'camo' && attacker.id === 'p2') {
+        if (!attacker.camo) {
+          attacker.camo = true;
+          attacker.camoTimer = 300;
+          playAltEgoRoarSFX();
+          document.getElementById('charStanceTag').classList.remove('hidden');
+          showFloatingText(attacker.x, attacker.y - 80, 'STEALTH CAMO', '#34d399');
+        }
+      }
+
+      // ULTIMATE: CHARISMA ULT / APEX JAGUAR ULT
+      else if (action === 'ult') {
+        if (attacker.superGauge < 100) return;
+        attacker.superGauge = 0;
+        attacker.state = 'ult';
+        attacker.stateTimer = 45;
+
+        if (attacker.id === 'p1') {
+          // Sbe3 Charisma Ult
+          playCharismaUltSFX();
+          speakAnnouncer('Charisma Ultimate!');
+          showAnnouncement('CHARISMA ULT!', 'BOW TO THE SULTAN OF CHARISMA!', '#eab308');
+          triggerScreenShake();
+
+          setTimeout(() => {
+            const dist = Math.abs(attacker.x - defender.x);
+            if (dist < 350) {
+              applyDamage(attacker, defender, 38, 'CHARISMA CRIT!', '#facc15', true);
+              spawnBlood(defender.x, defender.y - 60, 45);
+              defender.vy = -12;
+              defender.vx = attacker.facing * 12;
+            }
+          }, 400);
+        } else {
+          // Charlomanti Apex Jaguar Ult
+          playCharismaUltSFX();
+          speakAnnouncer('Apex Predator!');
+          showAnnouncement('APEX JAGUAR!', 'SHADOWS OF THE ANCIENT RAINFOREST!', '#10b981');
+          triggerScreenShake();
+
+          setTimeout(() => {
+            const dist = Math.abs(attacker.x - defender.x);
+            if (dist < 350) {
+              applyDamage(attacker, defender, 40, 'APEX SHRED!', '#34d399', true);
+              spawnBlood(defender.x, defender.y - 60, 50);
+              defender.vy = -12;
+              defender.vx = attacker.facing * 12;
+            }
+          }, 400);
+        }
+      }
+    }
+
+    // Apply Hit & Damage
+    function applyDamage(attacker, defender, baseDmg, textLabel, color, isHeavy = false) {
+      if (defender.state === 'dead') return;
+
+      let dmg = baseDmg;
+      if (attacker.altEgo) dmg = Math.floor(dmg * 1.6); // Alt Ego +60% dmg boost!
+      if (defender.camo) {
+        dmg = Math.floor(dmg * 0.4); // Camo absorbs 60% dmg
+        defender.camo = false;
+        document.getElementById('charStanceTag').classList.add('hidden');
+      }
+
+      // Deal HP
+      defender.hp = Math.max(0, defender.hp - dmg);
+      defender.state = 'hurt';
+      defender.stateTimer = 16;
+      defender.vx = attacker.facing * 4;
+
+      // Charge super gauges
+      attacker.superGauge = Math.min(100, attacker.superGauge + 15);
+      defender.superGauge = Math.min(100, defender.superGauge + 10);
+
+      // Hit sparks & blood
+      spawnHitSparks(defender.x, defender.y - 50, color, isHeavy ? 25 : 12);
+      spawnBlood(defender.x, defender.y - 50, isHeavy ? 35 : 15);
+      if (isHeavy) playHeavyHitSFX(); else playPunchSFX();
+      triggerScreenShake();
+
+      // Combo Counter
+      attacker.comboCount++;
+      attacker.comboDmg += dmg;
+      attacker.comboTimer = 70; // reset combo window
+      updateComboDisplay(attacker);
+
+      // Floating damage number
+      showFloatingText(defender.x, defender.y - 70, `-${dmg} ${textLabel}`, color);
+
+      // Check for Finish Him
+      updateHUD();
+      if (defender.hp <= 0) {
+        onDefenderDefeated(defender, attacker);
+      }
+    }
+
+    function updateComboDisplay(attacker) {
+      const display = document.getElementById(attacker.id === 'p1' ? 'p1ComboDisplay' : 'p2ComboDisplay');
+      const hitsEl = document.getElementById(attacker.id === 'p1' ? 'p1ComboHits' : 'p2ComboHits');
+      const dmgEl = document.getElementById(attacker.id === 'p1' ? 'p1ComboDmg' : 'p2ComboDmg');
+
+      if (attacker.comboCount >= 2) {
+        display.style.opacity = '1';
+        hitsEl.textContent = `${attacker.comboCount} HITS`;
+        dmgEl.textContent = `${attacker.comboDmg}% DAMAGE`;
+      }
+    }
+
+    // FINISH HIM & FATALITY SEQUENCES
+    function onDefenderDefeated(loser, winner) {
+      clearInterval(gameState.timerInterval);
+      loser.state = 'dead';
+      loser.vx = 0;
+
+      // Round check: If it's final round (match winning point) -> FINISH HIM!
+      if (winner.roundWins === 1) {
+        gameState.status = 'finish_him';
+        const loserPronoun = loser.id === 'p1' ? 'HIM' : 'HER';
+        showAnnouncement(`FINISH ${loserPronoun}!`, 'CHOOSE YOUR FATALITY', '#dc2626');
+        speakAnnouncer(`Finish ${loserPronoun.toLowerCase()}!`);
+        document.getElementById('fatalityPrompt').classList.remove('hidden');
+
+        // Auto timer if no fatality selected within 5 seconds
+        setTimeout(() => {
+          if (gameState.status === 'finish_him') {
+            document.getElementById('fatalityPrompt').classList.add('hidden');
+            resolveRoundVictory(winner);
+          }
+        }, 5500);
+      } else {
+        // Just round end
+        resolveRoundVictory(winner);
+      }
+    }
+
+    function triggerFatality(type) {
+      document.getElementById('fatalityPrompt').classList.add('hidden');
+      gameState.status = 'fatality';
+      triggerScreenShake();
+
+      const isSbe3 = type === 'sbe3';
+      const winner = isSbe3 ? p1 : p2;
+      const loser = isSbe3 ? p2 : p1;
+
+      // Slow motion blood bath
+      for (let i = 0; i < 80; i++) {
+        setTimeout(() => {
+          spawnBlood(loser.x + (Math.random() - 0.5) * 40, loser.y - 60, 20);
+          playHeavyHitSFX();
+        }, i * 35);
+      }
+
+      showAnnouncement('FATALITY!', `${winner.name.toUpperCase()} WINS!`, '#dc2626');
+      speakAnnouncer('Fatality! ' + winner.name + ' wins!');
 
       setTimeout(() => {
-        cutscene.classList.remove('opacity-100');
-        cutscene.classList.add('opacity-0');
-        ultTitle.classList.remove('scale-110');
-        ultTitle.classList.add('scale-75');
+        resolveMatchOver(winner);
+      }, 3500);
+    }
+
+    function resolveRoundVictory(winner) {
+      gameState.status = 'round_over';
+      winner.roundWins++;
+      updateRoundDots();
+
+      if (winner.roundWins >= 2) {
+        showAnnouncement(`${winner.name.toUpperCase()} WINS!`, 'FLAWLESS VICTORY', winner.colorTheme);
+        speakAnnouncer(`${winner.name} wins!`);
+        setTimeout(() => resolveMatchOver(winner), 2500);
+      } else {
+        showAnnouncement(`${winner.name.toUpperCase()} TAKES ROUND!`, '', winner.colorTheme);
+        speakAnnouncer(`${winner.name} takes the round!`);
+        setTimeout(() => startNextRound(), 2500);
+      }
+    }
+
+    function resolveMatchOver(winner) {
+      gameState.status = 'match_over';
+      showAnnouncement('CHAMPION', `${winner.name.toUpperCase()} RULES THE REALM`, winner.colorTheme);
+    }
+
+    function startNextRound() {
+      gameState.round++;
+      document.getElementById('roundText').textContent = `ROUND ${gameState.round}`;
+      resetRoundPositions();
+      startRoundCountdown();
+    }
+
+    function resetRoundPositions() {
+      p1.x = 250;
+      p1.y = 440;
+      p1.hp = 100;
+      p1.state = 'idle';
+      p1.altEgo = false;
+
+      p2.x = 710;
+      p2.y = 440;
+      p2.hp = 100;
+      p2.state = 'idle';
+      p2.camo = false;
+
+      updateHUD();
+    }
+
+    function resetMatch(fullReset = false) {
+      if (fullReset) {
+        p1.roundWins = 0;
+        p2.roundWins = 0;
+        gameState.round = 1;
+        document.getElementById('roundText').textContent = 'ROUND 1';
+        updateRoundDots();
+      }
+      document.getElementById('fatalityPrompt').classList.add('hidden');
+      resetRoundPositions();
+      startRoundCountdown();
+    }
+
+    function updateRoundDots() {
+      const p1Dots = document.getElementById('p1Rounds').children;
+      const p2Dots = document.getElementById('p2Rounds').children;
+      for (let i = 0; i < 2; i++) {
+        p1Dots[i].className = i < p1.roundWins ? 'w-3 h-3 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]' : 'w-3 h-3 rounded-full border border-amber-500/50 bg-slate-900';
+        p2Dots[i].className = i < p2.roundWins ? 'w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'w-3 h-3 rounded-full border border-emerald-500/50 bg-slate-900';
+      }
+    }
+
+    // Round countdown: "ROUND 1... FIGHT!"
+    function startRoundCountdown() {
+      gameState.status = 'intro';
+      gameState.timer = 99;
+      document.getElementById('matchTimer').textContent = '99';
+
+      showAnnouncement(`ROUND ${gameState.round}`, '', '#ef4444');
+      speakAnnouncer(`Round ${gameState.round}`);
+
+      setTimeout(() => {
+        showAnnouncement('FIGHT!', '', '#eab308');
+        speakAnnouncer('Fight!');
+        gameState.status = 'fighting';
+        hideAnnouncement(800);
+
+        // Start 99s timer
+        if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+        gameState.timerInterval = setInterval(() => {
+          if (gameState.status === 'fighting') {
+            gameState.timer--;
+            document.getElementById('matchTimer').textContent = gameState.timer;
+            if (gameState.timer <= 0) {
+              clearInterval(gameState.timerInterval);
+              // Time over winner
+              const winner = p1.hp >= p2.hp ? p1 : p2;
+              resolveRoundVictory(winner);
+            }
+          }
+        }, 1000);
       }, 1400);
     }
 
-    function animateFighterAttack(fighterId, direction) {
-      const sprite = document.getElementById(fighterId === 'sbe3' ? 'sbe3Graphic' : 'charGraphic');
-      const delta = direction === 'right' ? 45 : -45;
-      sprite.style.transform = `translateX(${delta}px) scale(1.1)`;
-      setTimeout(() => {
-        sprite.style.transform = 'translateX(0) scale(1)';
-      }, 220);
+    // UI Announcement Layer
+    function showAnnouncement(main, sub, color = '#ef4444') {
+      const textEl = document.getElementById('announcementText');
+      const subEl = document.getElementById('subAnnouncementText');
+      textEl.textContent = main;
+      textEl.style.color = color;
+      textEl.className = 'mk-title text-4xl sm:text-7xl md:text-8xl font-black tracking-widest uppercase transform scale-110 transition-transform duration-200 drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)]';
+
+      if (sub) {
+        subEl.textContent = sub;
+        subEl.style.opacity = '1';
+      } else {
+        subEl.style.opacity = '0';
+      }
     }
 
-    function animateFighterHurt(fighterId) {
-      const sprite = document.getElementById(fighterId === 'sbe3' ? 'sbe3Graphic' : 'charGraphic');
-      sprite.style.transform = 'scale(0.9) rotate(-6deg)';
-      sprite.style.filter = 'brightness(2) contrast(1.5)';
+    function hideAnnouncement(delay = 500) {
       setTimeout(() => {
-        sprite.style.transform = 'scale(1) rotate(0deg)';
-        sprite.style.filter = 'none';
-      }, 200);
+        const textEl = document.getElementById('announcementText');
+        textEl.className = 'text-4xl sm:text-7xl md:text-8xl font-black tracking-widest text-transparent uppercase transform scale-0 transition-transform duration-200';
+        document.getElementById('subAnnouncementText').style.opacity = '0';
+      }, delay);
+    }
+
+    function showFloatingText(x, y, text, color = '#f59e0b') {
+      const overlay = document.getElementById('damageOverlay');
+      const el = document.createElement('div');
+      el.className = 'absolute text-base sm:text-xl font-black floating-dmg arcade-font';
+      el.style.color = color;
+      el.style.left = `${(x / 960) * 100}%`;
+      el.style.top = `${(y / 540) * 100}%`;
+      el.textContent = text;
+      overlay.appendChild(el);
+      setTimeout(() => el.remove(), 750);
+    }
+
+    function triggerScreenShake() {
+      const container = document.getElementById('gameContainer');
+      container.classList.remove('shake-impact');
+      void container.offsetWidth;
+      container.classList.add('shake-impact');
+      setTimeout(() => container.classList.remove('shake-impact'), 300);
     }
 
     function updateHUD() {
-      // Sbe3
-      const sbe3HpPct = Math.max(0, (state.sbe3.hp / state.sbe3.maxHp) * 100);
-      document.getElementById('sbe3HpBar').style.width = `${sbe3HpPct}%`;
-      document.getElementById('sbe3HpText').textContent = `${Math.ceil(state.sbe3.hp)} / ${state.sbe3.maxHp} HP`;
-      
-      document.getElementById('sbe3EnergyBar').style.width = `${state.sbe3.energy}%`;
-      document.getElementById('sbe3EnergyText').textContent = `${state.sbe3.energy}%`;
-      document.getElementById('sbe3UltBtn').disabled = state.sbe3.energy < 100;
+      // P1 Health
+      const p1Pct = Math.max(0, p1.hp);
+      document.getElementById('p1HpBar').style.width = `${p1Pct}%`;
+      setTimeout(() => {
+        document.getElementById('p1HpBackdrop').style.width = `${p1Pct}%`;
+      }, 200);
 
-      // Sbe3 Alt Ego visual
-      const altBadge = document.getElementById('sbe3AltEgoBadge');
-      const mane = document.getElementById('sbe3Mane');
-      const eyesL = document.getElementById('sbe3EyeL');
-      const eyesR = document.getElementById('sbe3EyeR');
+      document.getElementById('p1SuperBar').style.width = `${p1.superGauge}%`;
+      document.getElementById('p1SuperText').textContent = `${p1.superGauge}%`;
+      document.getElementById('p1UltButton').disabled = p1.superGauge < 100;
 
-      if (state.sbe3.altEgo) {
-        altBadge.classList.remove('hidden');
-        document.getElementById('sbe3SpriteContainer').classList.add('alt-ego-active');
-        mane.setAttribute('fill', 'url(#altEgoMane)');
-        eyesL.setAttribute('fill', '#f43f5e');
-        eyesR.setAttribute('fill', '#f43f5e');
+      // P2 Health
+      const p2Pct = Math.max(0, p2.hp);
+      document.getElementById('p2HpBar').style.width = `${p2Pct}%`;
+      setTimeout(() => {
+        document.getElementById('p2HpBackdrop').style.width = `${p2Pct}%`;
+      }, 200);
+
+      document.getElementById('p2SuperBar').style.width = `${p2.superGauge}%`;
+      document.getElementById('p2SuperText').textContent = `${p2.superGauge}%`;
+      document.getElementById('p2UltButton').disabled = p2.superGauge < 100;
+    }
+
+    // ==========================================
+    // 4. INTELLIGENT AI (CPU CHARLOMANTI)
+    // ==========================================
+    let aiTick = 0;
+    function updateAI() {
+      if (!gameState.cpuEnabled || gameState.status !== 'fighting') return;
+      aiTick++;
+      if (aiTick % 18 !== 0) return; // run AI decisions periodically
+
+      const dist = Math.abs(p2.x - p1.x);
+
+      // AI Charlomanti decision tree
+      if (p2.superGauge >= 100 && Math.random() < 0.8) {
+        handleAction('p2', 'ult');
+      } else if (!p2.camo && Math.random() < 0.25) {
+        handleAction('p2', 'camo');
+      } else if (dist < 120) {
+        // In strike range -> Use signature Law Doc Hits or punches
+        if (Math.random() < 0.65) {
+          handleAction('p2', 'kick'); // Law Doc Hits!
+        } else {
+          handleAction('p2', 'punch');
+        }
       } else {
-        altBadge.classList.add('hidden');
-        document.getElementById('sbe3SpriteContainer').classList.remove('alt-ego-active');
-        mane.setAttribute('fill', 'url(#maneGrad)');
-        eyesL.setAttribute('fill', '#fef08a');
-        eyesR.setAttribute('fill', '#fef08a');
-      }
-
-      // Charlomanti
-      const charHpPct = Math.max(0, (state.char.hp / state.char.maxHp) * 100);
-      document.getElementById('charHpBar').style.width = `${charHpPct}%`;
-      document.getElementById('charHpText').textContent = `${Math.ceil(state.char.hp)} / ${state.char.maxHp} HP`;
-
-      document.getElementById('charEnergyBar').style.width = `${state.char.energy}%`;
-      document.getElementById('charEnergyText').textContent = `${state.char.energy}%`;
-      document.getElementById('charUltBtn').disabled = state.char.energy < 100;
-
-      const stanceBadge = document.getElementById('charStanceBadge');
-      if (state.char.camo) {
-        stanceBadge.classList.remove('hidden');
-        document.getElementById('charGraphic').style.opacity = '0.5';
-      } else {
-        stanceBadge.classList.add('hidden');
-        document.getElementById('charGraphic').style.opacity = '1';
-      }
-    }
-
-    function checkVictory() {
-      if (state.sbe3.hp <= 0 && state.char.hp <= 0) {
-        state.gameOver = true;
-        addLog('💀 DOUBLE K.O.! Both beasts fell simultaneously in an earth-shattering clash!', 'text-amber-500 font-bold text-sm');
-        return true;
-      }
-      if (state.sbe3.hp <= 0) {
-        state.gameOver = true;
-        addLog('🏆 CHARLOMANTI WINS! The Jaguar Huntress claims dominance with lethal precision!', 'text-emerald-400 font-black text-sm');
-        playBeep(300, 0.6, 'sawtooth');
-        return true;
-      }
-      if (state.char.hp <= 0) {
-        state.gameOver = true;
-        addLog('🏆 SBE3 WINS! The Sovereign Lion stands undefeated with supreme Charisma!', 'text-amber-400 font-black text-sm');
-        playCharismaUltSound();
-        return true;
-      }
-      return false;
-    }
-
-    // Main action dispatcher
-    function playerMove(fighter, move) {
-      if (state.gameOver || state.turnLock) return;
-
-      initAudio();
-
-      if (fighter === 'sbe3') {
-        executeSbe3Move(move);
-        // If playing in standard Player vs CPU mode, CPU Charlomanti retaliates
-        if (state.mode === 'pvp_cpu' && !state.gameOver) {
-          state.turnLock = true;
-          setTimeout(() => {
-            cpuAction('char');
-            state.turnLock = false;
-          }, 800);
-        }
-      } else if (fighter === 'char') {
-        executeCharMove(move);
-        // If playing as Charlomanti vs CPU Sbe3
-        if (state.mode === 'cpu_char' && !state.gameOver) {
-          state.turnLock = true;
-          setTimeout(() => {
-            cpuAction('sbe3');
-            state.turnLock = false;
-          }, 800);
+        // Move towards Sbe3 with agile leaps
+        p2.vx = p2.x > p1.x ? -4.5 : 4.5;
+        p2.state = 'walk';
+        if (Math.random() < 0.2 && p2.isGrounded) {
+          p2.vy = -16;
+          p2.state = 'jump';
         }
       }
     }
 
-    function executeSbe3Move(move) {
-      if (move === 'slash') {
-        animateFighterAttack('sbe3', 'right');
-        playPunchSound();
-        let dmg = Math.floor(12 + Math.random() * 6) * state.sbe3.atkBuff;
-        
-        if (state.char.camo) {
-          dmg = Math.floor(dmg * 0.4);
-          addLog(`🐆 Charlomanti partially dodged through shadow camo! Took reduced ${dmg} DMG.`);
-          state.char.camo = false;
-        } else {
-          addLog(`🦁 Sbe3 slashes with golden Lion Claws dealing <b class="text-amber-400">${dmg} DMG</b>!`);
-        }
+    // ==========================================
+    // 5. STAGE DRAWING (THE OUTWORLD TEMPLE)
+    // ==========================================
+    function drawArenaBackground(c) {
+      // Dark gothic sky gradient
+      const skyGrad = c.createLinearGradient(0, 0, 0, 440);
+      skyGrad.addColorStop(0, '#020617');
+      skyGrad.addColorStop(0.5, '#1e1b4b');
+      skyGrad.addColorStop(1, '#450a0a');
+      c.fillStyle = skyGrad;
+      c.fillRect(0, 0, 960, 540);
 
-        state.char.hp = Math.max(0, state.char.hp - dmg);
-        state.sbe3.energy = Math.min(100, state.sbe3.energy + 20);
-        showDamageNumber('char', `-${dmg} HP`, '#f59e0b');
-        animateFighterHurt('char');
-        triggerScreenShake();
+      // Blood Moon
+      c.save();
+      c.fillStyle = '#dc2626';
+      c.shadowColor = '#ef4444';
+      c.shadowBlur = 45;
+      c.beginPath();
+      c.arc(480, 120, 55, 0, Math.PI * 2);
+      c.fill();
+      c.restore();
 
-      } else if (move === 'roar') {
-        playRoarSound();
-        let dmg = Math.floor(18 + Math.random() * 8) * state.sbe3.atkBuff;
-        state.char.hp = Math.max(0, state.char.hp - dmg);
-        state.sbe3.energy = Math.min(100, state.sbe3.energy + 25);
+      // Ancient Temple Pillars
+      c.fillStyle = '#0f172a';
+      [-30, 200, 720, 930].forEach((px) => {
+        c.fillRect(px, 120, 60, 320);
+        // Pillar capital & base
+        c.fillRect(px - 8, 110, 76, 16);
+        c.fillRect(px - 6, 420, 72, 20);
+      });
 
-        addLog(`🗣️ Sbe3 unleashes <b>Roar of Sovereignty</b>! Shockwave blasts Charlomanti for <b class="text-amber-400">${dmg} DMG</b>!`);
-        showDamageNumber('char', `-${dmg} ROAR!`, '#ea580c');
-        animateFighterHurt('char');
-        triggerScreenShake();
+      // Animated Torches on pillars
+      [230, 750].forEach((tx) => {
+        c.save();
+        c.fillStyle = Math.random() > 0.5 ? '#f59e0b' : '#ef4444';
+        c.shadowColor = '#f59e0b';
+        c.shadowBlur = 25;
+        c.beginPath();
+        c.arc(tx, 220, 9 + Math.sin(Date.now() * 0.01) * 3, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+      });
 
-      } else if (move === 'alt_ego') {
-        playRoarSound();
-        state.sbe3.altEgo = true;
-        state.sbe3.atkBuff = 1.6;
-        state.sbe3.altEgoTurns = 3;
-        state.sbe3.energy = Math.min(100, state.sbe3.energy + 30);
+      // Stone Arena Floor with Blood Stains
+      const floorGrad = c.createLinearGradient(0, 440, 0, 540);
+      floorGrad.addColorStop(0, '#1c1917');
+      floorGrad.addColorStop(0.2, '#292524');
+      floorGrad.addColorStop(1, '#09090b');
+      c.fillStyle = floorGrad;
+      c.fillRect(0, 440, 960, 100);
 
-        addLog(`🎭 <b>ALT EGO AWAKENED!</b> Sbe3 unlocks his ferocious shadow-lion persona! ATK increased by +60%!`, 'text-purple-400 font-bold');
-        showDamageNumber('sbe3', `ALT EGO +60% ATK`, '#c084fc');
-        triggerScreenShake();
-
-      } else if (move === 'ult') {
-        if (state.sbe3.energy < 100) return;
-        state.sbe3.energy = 0;
-        playCharismaUltSound();
-
-        triggerUltCutscene('CHARISMA ULT!', 'BOW TO THE SULTAN OF CHARISMA!', 'sbe3');
-        
-        let dmg = Math.floor(38 + Math.random() * 12) * state.sbe3.atkBuff;
-        state.char.hp = Math.max(0, state.char.hp - dmg);
-
-        setTimeout(() => {
-          addLog(`👑 <b>SBE3'S CHARISMA ULT ERUPTS!</b> An overwhelming solar lion blast obliterates Charlomanti for <b class="text-yellow-400">${dmg} CRITICAL DMG</b>!`, 'text-yellow-300 font-black');
-          showDamageNumber('char', `💥 -${dmg} CHARISMA!`, '#eab308');
-          animateFighterHurt('char');
-          triggerScreenShake();
-          updateHUD();
-          checkVictory();
-        }, 800);
+      // Floor tiles lines
+      c.strokeStyle = '#44403c';
+      c.lineWidth = 1.5;
+      for (let x = 0; x < 960; x += 60) {
+        c.beginPath();
+        c.moveTo(x, 440);
+        c.lineTo(x - 30, 540);
+        c.stroke();
       }
-
-      // Tick Alt Ego turn duration
-      if (state.sbe3.altEgo && move !== 'alt_ego') {
-        state.sbe3.altEgoTurns--;
-        if (state.sbe3.altEgoTurns <= 0) {
-          state.sbe3.altEgo = false;
-          state.sbe3.atkBuff = 1;
-          addLog(`🎭 Sbe3's Alt Ego burns out, returning to calm lion form.`, 'text-slate-400');
-        }
-      }
-
-      updateHUD();
-      checkVictory();
+      c.strokeRect(0, 440, 960, 1);
     }
 
-    function executeCharMove(move) {
-      if (move === 'pounce') {
-        animateFighterAttack('char', 'left');
-        playPunchSound();
-        let dmg = Math.floor(13 + Math.random() * 6);
-        state.sbe3.hp = Math.max(0, state.sbe3.hp - dmg);
-        state.char.energy = Math.min(100, state.char.energy + 20);
+    // ==========================================
+    // 6. MAIN 60FPS GAME LOOP
+    // ==========================================
+    function gameLoop() {
+      // Clear & Draw Stage
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawArenaBackground(ctx);
 
-        addLog(`⚡ Charlomanti pounces from high ground, striking Sbe3 for <b class="text-emerald-400">${dmg} DMG</b>!`);
-        showDamageNumber('sbe3', `-${dmg} HP`, '#10b981');
-        animateFighterHurt('sbe3');
-        triggerScreenShake();
+      // Update AI
+      updateAI();
 
-      } else if (move === 'low_dock') {
-        playLowDockSound();
-        animateFighterAttack('char', 'left');
-        
-        // 3 consecutive hits for Law Doc Hits
-        let hits = 3;
-        let totalDmg = 0;
-        for (let i = 0; i < hits; i++) {
-          const hitDmg = Math.floor(7 + Math.random() * 4);
-          totalDmg += hitDmg;
-        }
+      // Update & Draw Fighters
+      p1.update(p2);
+      p2.update(p1);
 
-        state.sbe3.hp = Math.max(0, state.sbe3.hp - totalDmg);
-        state.char.energy = Math.min(100, state.char.energy + 30);
+      p1.draw(ctx);
+      p2.draw(ctx);
 
-        addLog(`🥋 <b>LAW DOC HITS!</b> Charlomanti sweeps low with 3 rapid ankle snaps for <b class="text-teal-300">${totalDmg} MULTI-HIT DMG</b>!`, 'text-teal-400 font-semibold');
-        showDamageNumber('sbe3', `💥 -${totalDmg} LAW DOC!`, '#14b8a6');
-        animateFighterHurt('sbe3');
-        triggerScreenShake();
-
-      } else if (move === 'camo') {
-        playBeep(600, 0.25, 'sine');
-        state.char.camo = true;
-        state.char.energy = Math.min(100, state.char.energy + 20);
-        addLog(`🌫️ Charlomanti enters <b>Shadow Camo</b>! Next incoming hit is reduced & next strike is boosted!`, 'text-emerald-300');
-        showDamageNumber('char', `CAMOUFLAGE`, '#34d399');
-
-      } else if (move === 'ult') {
-        if (state.char.energy < 100) return;
-        state.char.energy = 0;
-        playCharismaUltSound();
-
-        triggerUltCutscene('APEX JAGUAR ULT!', 'SHADOWS OF THE ANCIENT RAINFOREST!', 'char');
-
-        let dmg = Math.floor(40 + Math.random() * 12);
-        state.sbe3.hp = Math.max(0, state.sbe3.hp - dmg);
-
-        setTimeout(() => {
-          addLog(`🌪️ <b>CHARLOMANTI'S APEX ULT!</b> Phantom Jaguar claws shred the dimension, dealing <b class="text-emerald-300">${dmg} DEVASTATING DMG</b>!`, 'text-emerald-400 font-black');
-          showDamageNumber('sbe3', `💥 -${dmg} APEX SHRED!`, '#10b981');
-          animateFighterHurt('sbe3');
-          triggerScreenShake();
-          updateHUD();
-          checkVictory();
-        }, 800);
-      }
-
-      updateHUD();
-      checkVictory();
-    }
-
-    // AI logic for CPU
-    function cpuAction(fighter) {
-      if (state.gameOver) return;
-      if (fighter === 'char') {
-        // CPU Charlomanti AI
-        if (state.char.energy >= 100) {
-          executeCharMove('ult');
-        } else if (!state.char.camo && Math.random() < 0.3) {
-          executeCharMove('camo');
-        } else if (Math.random() < 0.55) {
-          executeCharMove('low_dock');
-        } else {
-          executeCharMove('pounce');
-        }
-      } else if (fighter === 'sbe3') {
-        // CPU Sbe3 AI
-        if (state.sbe3.energy >= 100) {
-          executeSbe3Move('ult');
-        } else if (!state.sbe3.altEgo && Math.random() < 0.35) {
-          executeSbe3Move('alt_ego');
-        } else if (Math.random() < 0.5) {
-          executeSbe3Move('roar');
-        } else {
-          executeSbe3Move('slash');
+      // Update & Draw Particles (Blood, Sparks)
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw(ctx);
+        if (particles[i].life <= 0) {
+          particles.splice(i, 1);
         }
       }
+
+      requestAnimationFrame(gameLoop);
     }
 
-    // Keyboard Hotkeys
-    window.addEventListener('keydown', (e) => {
-      const k = e.key.toLowerCase();
-      // Sbe3 hotkeys: A, S, D, F
-      if (k === 'a') playerMove('sbe3', 'slash');
-      if (k === 's') playerMove('sbe3', 'roar');
-      if (k === 'd') playerMove('sbe3', 'alt_ego');
-      if (k === 'f') playerMove('sbe3', 'ult');
-
-      // Charlomanti hotkeys: H, J, K, L
-      if (k === 'h') playerMove('char', 'pounce');
-      if (k === 'j') playerMove('char', 'low_dock');
-      if (k === 'k') playerMove('char', 'camo');
-      if (k === 'l') playerMove('char', 'ult');
-    });
-
-    // Reset Battle
-    function resetBattle() {
-      state.sbe3.hp = 100;
-      state.sbe3.energy = 25;
-      state.sbe3.altEgo = false;
-      state.sbe3.altEgoTurns = 0;
-      state.sbe3.atkBuff = 1;
-
-      state.char.hp = 100;
-      state.char.energy = 25;
-      state.char.camo = false;
-      state.char.camoTurns = 0;
-
-      state.gameOver = false;
-      state.turnLock = false;
-
-      updateHUD();
-      addLog('⚔️ The Arena resets! Sbe3 and Charlomanti lock eyes for another duel!', 'text-amber-400 font-bold');
-      playBeep(440, 0.15, 'triangle');
-    }
-
-    // Initialize
-    updateHUD();
+    // Start everything!
+    resetMatch(true);
+    requestAnimationFrame(gameLoop);
   </script>
 </body>
 </html>
